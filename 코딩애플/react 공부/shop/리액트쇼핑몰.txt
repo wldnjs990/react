@@ -1,0 +1,488 @@
+* 리액트로 쇼핑몰 만들기
+
++ Bootstrap 라이브러리(html 자동으로 짜주는 라이브러리 / 라이브러리 사용법)
+    - 개발 작업을 할 때 작업 시간과 피로를 덜어주는 프로그램이 라이브러리임.
+    - html을 짜는건 시간이 오래 걸리는 작업이므로 "Bootstrap"이라는 라이브러리로 간단하게 html을 짜보려고 한다.
+        * react에서 라이브러리 사용하는 방법
+            - 사용할 라이브러리 사이트에 접속한다.
+            - 라이브러리 사이트에서 해당 라이브러리를 설치하는 터미널 코드를 찾는다.
+            - 해당 코드를 터미널에 입력하면 라이브러리가 다운로드 된다.
+
+
+* react에서 html에 배경 이미지 삽입하기(import문)
+    - 굳이 왜 하는진 모르겠지만 css를 안 쓰고 html에 배경이미지(backgroundImage)를 삽입하려면 import문을 사용해야 한다.
+    - react에서 html에 이미지를 넣으려면 해당 태그에 style attribute를 달아야 한다.
+        - ex) <div style = {{backgroundImage : '이미지 경로'}}></div>
+    - 그런데 react에선 js 처럼 "url(경로)"를 넣어서 즉석으로 이미지 경로를 정할 수 없다.
+    - jsx파일 특성인지 뭔진 모르겠지만 import문을 통해서 해당 이미지파일 경로를 저장한 후에 집어 넣어야 한다.
+    - " import 작명 from '이미지경로' "이렇게 import 문으로 경로를 저장한 다음에 style attribute에 url() 언어를 'url(' 과 ')'으로 두 개로 분리해놓고 그 사이에 작명한 import문을 +로 연결시키면 된다.
+        ex) <div style = {{backgroundImage : 'url(' + 작명 + ')' }}></div>
+    - 솔직히 이미지 하나하나 넣는것도 너무 효율 떨어지고 복잡하고 가독성 엄청 떨어지는데 왜 html에 style을 넣으려는지는 모르겠다. 난 css파일에 style 만들거 같다. 그냥 "import '../App.css'" 이렇게 딸깍 한번 하면 끝 아닌가..
+        * html 만들때 img태그 src 설정할 때도 import문을 사용해야 해서 어쩔수 없이 import문을 사용해야 할 거 같다.. 진짜 왜 이렇게 불편한 방식으로 만들었을까...
+
+* 이미지 파일 등 저장은 public폴더에(import로 이미지 끌어와서 쓰는게 불편한 사람을 위해 준비한 public폴더)
+    - 앞에 이미지 파일을 삽입하려면 import문을 사용하는 복잡한 절차를 밟아야 하고 수많은 이미지 파일들을 import로 불러오기도 부담스럽다.
+    - public 폴더에 이미지를 저장하면 훨씬 간편하게 코드를 짤 수 있다.
+    - src파일에 있는 파일들은 실제로 웹페이지 배포를 할 때 js, css, html이 압축이 되거나 파일명이 변해서(bundling이라고 한다.) 이미지 파일을 import문으로 만드는등 추가 작업을 해야 했다.
+    - 하지만 public폴더 안에 있는 파일은 압축되지 않고 온전히 이름과 형태를 보존한다.
+    - public폴더 안에 있는 자료를 끌어오고 싶을때 경로를 "/경로" 이렇게 경로 앞에 / 하나만 붙이면 끌어올 수 있다.
+    - 하지만 이렇게 "/경로"를 이용해 만든 src경로는 서브페이지에 적용할때 오류가 발생한다.
+    - main.com/어쩌구/ 가 주소인 사이트에 이미지 경로를 삽입 하려면 "/어쩌구/경로" 이렇게 수정해야 적용된다.
+    - 하지만 수십개의 서브페이지에 어쩌구를 바꾸려면 너무 복잡해질 수 있어서 create react app 라이브러리 홈페이지에서 권장하는 경로코드를 이용해여 일관성 있게 경로를 만들 수 있다.
+    - "<img src = {process.env.PUBLIC_URL + '/경로'}></img>" 이렇게 public경로 앞에 process.env.PUBLIC_URL 코드를 입력하면 자동으로 해당 페이지의 어쩌구 값을 입력시켜준다. 
+
+* export / import 사용법(서버에서 변수, 함수 등 데이터 가져올떄)
+    - 서버에서 업데이트 되는 파일을 가져와 홈페이지에 넣으려면 export / import 함수를 잘 알아야 한다.
+    - export함수는 해당 js 안에 있는 변수, 함수 등을 다른 파일로 가져갈 수 있게 만드는 문법이다.
+    - import함수는 다른 js파일 안에 있는 변수, 함수 등을 가져와서 사용할 수 있게 만드는 문법이다.
+        * export / import 함수 사용법
+            1. 하나의 변수를 전송하고 싶을때
+            - export default "변수명" <- 이 코드를 입력하면 해당 js파일에 있는 변수를 옮길수 있는 상태로 만들어준다.
+                * import "작명" from "./해당파일경로" <- 이 코드를 import 받을 파일에 작성하여 "작명"으로 변수처럼 사용 가능
+            2. 하나 이상의 변수를 전송하고 싶을때
+            - export {"변수명1", "변수명2" , "변수명 3"} <- 이 코드를 입력하면 해당 js파일에 있는 변수들을 클로저 안에 입력한 만큼 옳길수 있는 상태로 만들어준다.
+                * import {"변수명1", "변수명2" , "변수명 3"} from "./해당경로파일" <- 이 코드를 import 받을 파일에 작성하면 클로저 안에 "변수명"으로 변수처럼 사용 가능
+    - 물론 예시엔 변수명이라고만 적었지만 함수, 컴포넌트들도 가져올 수 있다.
+    - import 해 온 자료듣은 state변수로 만들어 기존에 state를 사용하던 방식대로 사용하면 된다.
+
+* router(라우터, react에서 서브페이지(상세페이지)를 만들고 싶을때 사용하는 라이브러리)
+    - 웹페이지를 만들면서 메인페이지 이외에 서브페이지를 만드는 경우 일반 js는 새로 html을 만들어 서브페이지를 만든다.
+    - js로 만들어진 html파일을 /서브파일명 을 입력하면 해당 주소로 접속해 html파일을 보여주는 형식임
+    - react에선 페이지를 하나만 사용하며 그 페이지 안에서 페이지들을 교체하며 보여주는 형식을 가지고 있다 이를 SPA(single page application)라고 한다.
+    - react에서 상세페이지를 나눌땐 메인 파일에 컴포넌트로 새로 서브페이지를 추가한 후
+    - /작명 링크로 접속을 하면 메인 파일에서 해당 서브페이지 컴포넌트를 보여주는 형식임.
+    - 라우터 기능은 기존 react에 라이브러리를 설치해서 사용하는 방식으로 "react-router-dom"이라는 라우터를 현재 대부분이 사용 중이다.
+        * react-router-dom으로 라우터 사용하기
+            - 우선 알아둬야 할 점은 라우터 라이브러리는 여러가지 사이트들이 있고 이 react-router-dom은 그 사이트들 중 하나를 사용하는것 뿐이니 굳이 외우려 하지 말고 그때그때 필요한 사이트에서 설명서를 보면서 라우터 라이브러리를 사용하면 된다.
+                이것도 react-router-dom 사이트 들어가면 설명 그대로 있음.
+            1. 터미널을 열어 "npm install react-router-dom@6"을 입력해 react-router-dom 6버전을 설치한다.
+            2. index.js(app.js로 만든 html import 하는 파일?) 에 들어가 메인페이지 컴포넌트를(ex. <APP />) "<BrouserRouter></BrouserRouter>"라는 태그로 감싸주면 된다.
+                ex) <BrowserRouter><APP /></BrowserRouter>
+                    * BrowserRouter를 사용하면 index.js파일 위에 BrowserRouter을 react-router-dom으로 부터 가져온다는 import문이 형성된다.
+            
+            * 팁) import문을 사용할때, 내가 만든파일을 import 하려는 경우엔 파일경로 앞에 "./"을 붙여야 하고 다른 외부 사이트등에서 파일을 가져오려고 하는 경우엔 외부 사이트의 설명서를 따라 경로를 작성하는데 이곳엔 대부분 "./"을 넣지 않는다.
+            
+            3. App.js파일로 돌아와 import문법으로 router기능을 사용하는데 필요한 함수 "Routes, Route, link" 를 react-router-dom에서 가져온다.
+                ex) import {Routes, Route, link} from "react-router-dom";
+            4. 홈페이지에 나온 사용법처럼 App.js 파일 html에 들어가서 Routes, Route, link를 태그처럼 사용하여 라우터 기능을 구현하면 된다.
+                ex) <Routes>
+                        <Route path="/작명" element={HTML내용}></Route>
+                        <Route path="/작명2" element={HTML내용}></Route>
+                    </Routes>
+                    * 여기서 path는 해당 링크에 추가로 "/작명"을 붙여주면 해당 element를 보여주는 용도로 사용된다.
+            5. link태그를 이용하면 주소창을 수정해 페이지 이동 버튼을 만들 수 있다.
+                ex) <link to="/">홈</link> == 홈 화면으로 이동
+                    <link to="/detail">상세페이지</link> == 상세페이지 화면으로 이동
+            6. App.js 안에 너무 많은 코드가 들어간다 싶으면 새로 js 파일을 하나 만들고 그 안에 서브 컴포넌트를 만든 후에 변수로 저장 후 export해서 App.js에 import시켜 라우팅 하면 된다.
+                * 404페이지(주소를 잘못입력했을때 잘못입력했다 알려주는 페이지)만들기
+                    - 주소를 잘못 쳐서 엉뚱한 페이지가 나왔음을 알려주는 페이지를 수동으로 만들 수 있다.
+                        1. Route의 경로(path)설정을 할 때 "*"을 입력하면 기록된 경로 이외의 모든 것들을 칭하게 된다.
+                        2. * 로 경로를 설정하고 element에 오류페이지라고 설명해주는 컴포넌트를 만들면 끝이다.
+                            ex) <Route path="*" element={<div>잘못된 페이지입니다.(404)</div>}></Route>
+
+* useNavigate / Outlet / Nested Routes(다양한 라우터 라이브러리 기능)
+    * 이것도 import로 react-router-dom에서 명령어들을 가져와서 사용한다.
+        1. useNavigate(페이지 이동을 도와주는 함수)
+            - useNavigate는 앞서 보여준 라우터 기능인 Link기능을 대신 할 수 있다.
+            - "let 작명 = useNavigate();" <- 이렇게 usestate처럼 변수로 useNavigate를 만든 후에 기능을 넣을 태그에 onClick이벤트리스너를 넣고 function함수를 만들어 그 안에 "작명(/이동할페이지경로)"를 입력하면 페이지 이동 기능이 구현된다.
+                ex) <div onClick={() => {작명(/이동할페이지경로)}}></div>
+            - 추가로 "작명(1)" / "작명(-1)" 등 useNavigate함수에 저런 숫자를 집어넣으면 양수 = 페이지 앞으로 가기 / 음수 = 페이지 뒤로 가기 의 기능으로 숫자만큼 반복된다.
+        2. Nested Routes(페이지 안에 페이지 만들기) + Outlet(Nested Route 배출구)
+            - 페이지 안에 거미줄처럼 연결되는 또 다른 페이지를 만들때 경로(path)를 "/페이지/페이지안에페이지" 이런식으로 줄줄이 이어서 만들수도 있다.
+            - 하지만 다른 방식으로도 구현할 수 있다.
+            - <Route path="/"></Route>문법을 div라고 생각하고 안에 자식 Route들을 집어넣으면(이 떄 서브페이지 경로엔 "/"을 붙이면 안된다.) 페이지 경로를 이어붙이는 효과를 보여준다.
+                ex) <Route path="/서브페이지" element={}>
+                        <Route path="서브서브페이지1" element={}></Route>  ==  "/서브페이지/서브서브페이지1"
+                        <Route path="서브서브페이지2" element={}></Route>  ==  "/서브페이지/서브서브페이지2"
+                    </Route>
+            - 이렇게만 해서 끝난게 아닌게 서브서브페이지들을 서브페이지 안에서 보여주기 위해서는 서브페이지의 어느곳에서 보여줘야 할 지도 정해줘야 한다(안 정해주면 경로 입력해도 서브서브페이지 안 보여줌).
+            - "<Outlet></Outlet>"이라는 태그를 만들면 해당 태그의 위치에서 서브서브페이지들을 보여줄 수 있게 된다.
+                ex) 
+                    function 서브페이지(){
+                        <h4>서브페이지임</h4>
+                        <Outlet></Outlet>      <== 저 공간 안에 "/서브페이지/서브서브페이지1"경로를 짜면 서브서브페이지1의 내용이 들어가게 된다.
+                    }
+    - 이런 식으로 페이지를 만들면 ui뒤로가기 버튼을 직접 구현할 수도 있고 UI스위치를 만들어 페이지 이동경험을 쉽게 만들어주는 등 이점들이 많다.
+
+* URL파라미터(상세페이지 100개 만들때 쉽게 정리하기)
+    - Route 안에 자식 Route요소를 넣어서 서브서브페이지를 만들 수 있지만 쇼핑몰에 여러가지 상품들의 상세페이지 같이 100개, 1000개의 서브페이지를 만드려고 한다면 jsx안에 코드를 너무 많이 써야 한다.
+    - 이를 해결하기 위한 방법이 URL파라미터인데 사용 방법은 간단하다.
+    - 서브페이지 주소 다음에 "/:작명(URL파리미터)"을 해주면 아무 문자나 입력해도 그 앞에 서브페이지 주소로 들어가게 되는 코드다.
+        ex) <Route path = "/Detail/:word" element = {<div>123</div>}
+            == 주소창에 "localhost123/Detail/아무런말" 이렇게 입력을 해도 Detail페이지가 출력되게 바뀐다.
+    - 이렇게 "/:작명"으로 만든 서브페이지는 어떤 문자나 숫자를 입력해도 똑같은 페이지가 나온다.
+    - 하지만 이 페이지에서 여러가지 상품을 보여주기 위해선 Detail페이지의 html이 유동적인 html이 되어야 한다.
+    - Detail페이지에서 데이터를 state로 가져와서 상품 순서를 보여줄 수도 있겠지만 엄청 귀찮고 복잡할 것 같다.
+    - "/:작명"을 사용했을때의 작명을 Detail로 가져오는 방법이 있는데 이 방법을 사용하면 훨씬 수월하게 할 수 있다.
+    - "useParams()"이라는 함수를 사용하면 ":/작명(URL파라미터)"에서 작명했던 내용을 import해올 수 있다.
+        ex) "localhost123/Detail/:1" 페이지에서 useParams()을 사용 == useParams()에는 1이 저장되었음.
+    - 이를 함수로 만들어 let a = useParams();을 사용하면 작명했던 글자를 변수로 해당 페이지에서 사용할 수 있게 된다.
+
+* find(object함수의 특정 한가지 값을 특정해서 object를 불러오는 방법)
+    - 방금 같은 URL파라미터를 통해 여러개의 서브페이지를 만들수 있다.
+    - 그런데 만약 메인페이지에서의 정렬된 html들이 이름정렬 등으로 인해 순서가 뒤죽박죽 섞이게 된다면 기존에 map함수 등으로 순서를 정해놓은 html들이 뒤죽박죽 섞여 상세페이지에서 보여주는 물건들도 전부 섞이게 될 수 있다.
+    - 그래서 상세페이지를 유동적으로 만들때엔 array, object의 순서로 페이지를 만드는 것이 아닌 array, object 안에 만들어놓은 특정한 값(ex. id : 0)을 충족시키는 array, object를 보여주게 만들어야 한다.
+    - arr.find(function(파라미터){파라미터.특정값 == 특정값의값})을 사용하면 해당 arr에서 특정한값의값을 가지고 있는 object내용을 가져올 수 있게 된다.
+        ex) 
+            arr = [
+                {
+                    id : 0,
+                    product : a
+                },
+                {
+                    id : 1,
+                    product : b
+                },
+                {
+                    id : 2
+                    product : c
+                }
+            ]
+
+            arr.find(function(a){a.id == 0})  
+
+              ==>   {
+                        id : 0,
+                        product : a
+                    }
+                    
+    - 이걸 사용하면 정렬기능을 사용하여 뒤죽박죽된 html에서 링크를 들어가도 해당 고유 값을 가지고 있는 object의 내용으로 이동하게 된다.
+
+*styled-components(css파일 없이 css만들기 라이브러리)
+    - "styled-components"라는 라이브러리가 있는데 이걸 사용하면 css파일 필요 없이 간편하게 css를 작성할 수 있다고 한다.
+        * 설치방법
+            1. 터미널에 "npm install styled-components"를 입력해 라이브러리를 설치한다. 
+            2. 사용할 파일에 styled기능을 styled-components라이브러리에서 import해온다.
+                ex) import styled from "styled-components"
+            3. import한 파일 안에서 변수로 내가 원하는 스타일의 태그를 형성할 수 있는 "styled"문법을 사용 할 수 있게 된다.
+                ex) let Yellowbtn = styled.button`
+                                    backgroundcolor : yellow;
+                                    color : black;
+                                    padding : 10px;
+                                    `
+                * "styled.태그" 다음에 ``을 사용해야 클로저 처럼 스타일을 넣을 수 있게 해준다
+            4. 변수로 만든 styled문법은 컴포넌트처럼 사용이 가능하다.
+                ex) <Yellow>버튼</Yellow>
+                    ==> styled에 작성했던 스타일 대로 버튼이 만들어진다.
+        
+    - styled-components의 장점
+            - 다른 js파일들의 간섭 없이 style이 적용된다.
+            - 무슨 말이냐면 css파일로 스타일을 만든게 있다면 그 파일의 내용이 모든 js파일에 적용되서 의도가 없었지만 class나 id가 똑같은 태그에 해당 css가 적용되는 불상사가 발생할 수 있다.
+            - react가 파일을 배포하게 될 때 모든 파일들을 압축하기 때문이다(이를 bundling이라고 한다).
+                * 하지만 styled기능 없이 한 가지 파일에만 css파일을 종속시킬 수 있는 방법이 있다.
+                    - 해당파일.js
+                      해당파일.module.css
+
+                      이렇게 해당파일 다음에 ".module.css"를 붙이면 해당파일에 종속된 css가 된다.
+            - css를 구동할때 해당 페이지 css만 구동 시키기 때문에 페이지 로드 속도가 향상된다.
+            - 변수로 만든 css들은 "${props => props.작명}"으로 유동적으로 변경이 가능하다.
+                ex) let Box = styled.div`
+                    backgroundcolor : ${props => props.bg};
+                    `
+                    <Box bg="grey">상자임</Box>
+                    ==> div태그에 회색배경이 깔린다.
+            - 더욱 유동적인 styled를 만드려면 jsx에서의 if문인 " ? : "문을 사용하면 된다.
+                ex) let Box = styled.div`
+                    backgroundcolor : ${props => props.bg};
+                    color : ${props => props.bg == "grey" ? "white" : "black"}
+                    `
+                    <Box bg="grey">상자임</Box>
+                    ==> div태그에 회색배경이 깔리고 흰색 글자가 세겨진다.
+                    <Box bg="yellow">상자임</Box>
+                    ==> div태그에 노란색배경이 깔리고 검은색 글자가 세겨진다.
+            - 추가로 기존의 스타일에서 새로 추가하는 스타일 태그를 만드려 할 때 기존 스타일을 복사 할 수 있는 기능도 있다.
+                ex) let Newbox style.button(Box)`
+                    fontSize : 10px;
+                    `
+                    => 기존의 Box컴포넌트의 스타일을 그대로 가져와주고 추가로 ``를 달아 수정할 수 있다.
+                        * 직접 해보니깐 오류 생기고 안되는데 내가 잘못한건지 업데이트 돼서 지원을 안하는지 모르겠다.
+        
+    - styled-components의 단점
+            - js파일이 매우 복잡해지고 가독성이 떨어짐
+            - 다른 파일에서 해당 styled-component를 사용해야 하면 import로 가져와야 하는데 이러면 일반 css와 다를바 없음
+            - 협업 할 때 css담당이 css외길인생을 달려왔으면 이런 해괴망측한 코드를 이해 못 할 수 있다.
+
+    - styled-component 결론
+            - 장점도 있고 단점도 있는 라이브러리라서 필수는 아니고 내가 css를 잘한다면 굳이 사용 안해도 괜찮다.
+            - 협업시에 팀원들이 해당 라이브러리를 사용한다면 옆에서 아는척 하자.
+        
+* lifecycle과 useEffect(hook)
+    * lifecycle이란
+        - lifecycle는 컴포넌트의 생애를 표현하는 것과 같다.
+            1. 컴포넌트가 페이지에 장착(형성)되는 것(mount)
+            2. 컴포넌트가 업데이트(리렌더링?)되는 것(update)
+            3. 컴포넌트가 페이지에서 제거되는 것(unmount)
+    
+    - 우리는 코드를 통해 컴포넌트의 lifecycle에 간섭할 수 있다.
+    - 어떤 식이냐면 세 가지 생애주기에 갈고리를 달아 추가로 코드를 실행시키는 것이다.
+    - 기존의 옛 react문법(class문법)에선 컴포넌트 클로저 안에 각각 
+        componentidMount(){
+            컴포넌트 mount시 이곳의 코드가 실행됨
+        }
+        componentidUpdate(){
+            컴포넌트 update시 이곳의 코드가 실행됨
+        }
+        componentWillUnmount(){
+            컴포넌트 unmount시 이곳의 코드가 실행됨
+        }
+        이런 코드들을 넣어서 훅(hook)으로 코드를 실행시켰다.
+    - 요즘 react문법으로 컴포넌트에 훅을 달려면 "useEffect"을 사용하면 된다.
+    - "useEffect(()=>{})"를 사용하면 페이지가 렌더링 된 이후에 useEffect 안에 있는 코드를 실행시키는 기능을 수행한다.
+    - useEffect를 이용하면 계산이 오래 걸리는 연산자 기능 등을 페이지가 렌더링 된 후에 실행시켜 주기 때문에 필요한 구간에 코드를 넣을 수 있고, 페이지가 렌더링 되는 시간을 단축시켜주는 역할을 한다.
+    - 왜 react 제작자가 이름을 useEffect로 지었는지 생각해보면 기존 js 기능에서 함수를 코딩할때 함수의 핵심기능 이외에 자잘한 기능들을 프로그래밍 용어로 "side effect"라고 부르는데 그것의 이름을 따 와서 지었다고 보면 된다.
+    - 작명 의도대로 핵심기능을 제외한 자잘한 기능들을 담은 함수들을 따로 보관해 실행시키는 장소가 "useEffect"라고 생각하면 된다.
+        ex) 오래걸리는 반복연산, 서버에서 데이터 가져오는 작업, 타이머 달기 등등
+
+* Dependency array([], useEffect 실행조건 만들기)
+    - useEffect문 클로저 뒤에 ", []"을 추가하면 추가로 실행조건을 넣을 수 있다.
+        ex) useEffect=(()=>{}, [])
+    - [](Dependency array / 디펜던시 어래이 / 의존 어래이) 안에 state변수를 집어넣으면 해당 state변수가 변할때만 useEffect 안에 있는 코드를 실행시켜준다(새로고침으로 리렌더링 하는 경우엔(Mount)useEffect 코드가 실행되는거 같다).
+    - 이러면 [] 안에 존재하는 state 이외의 다른 state가 변경될때엔 해당 useEffect 코드가 실행되지 않는다.
+    - 추가로 [] 안에 아무 state도 넣지 않는다면 오직 컴포넌트가 Mount 될 시에만 useEffect 코드가 실행되게 만들수 있다.
+
+* useEffect 안에서 사용하는 return문
+    - useEffect 클로저 안에 return문을 넣으면 return문 안에 있는 코드는 useEffect가 동작하기 전에 실행된다.
+        ex)
+            useEffect(()=>{
+                대충 코드들 1
+                return()=>{
+                    대충 코드들 2
+                }
+            }, [])
+            
+            ==> 이러면 return문 안에 있는 코드들(대충 코드들 2)이 먼저 동작하게 된다.
+
+    * 해당 return문은 주로 기존에 있던 코드들을 지우는 용도로 자주 사용된다.(clean up function 이라고 부름)
+    - 주로 서버에서 데이터를 몇 초에 걸쳐서 가져오게 만들때 페이지를 리렌더링 하는 일이 많아지만 
+      그 만큼 몇 초 후에 가져오는 데이터들이 계속 생가면서 페이지 오류가 발생할 수 있는데 그 때 return문에 "기존 데이터요청은 전부 지워주세요"라는 식의 코드를 짜서 오류를 방지하게 만든다.
+    - clean up function은 특징이 하나 있는데 컴포넌트가 Mount 될 시엔 작동을 안하고 컴포넌트가 unMount할 시엔 작동을 한다.
+
+* "replace(/ /g, "")"   <= input값을 가져올때 띄워쓰기 값을 모두 지우고 싶을때 사용하면 띄워쓰기를 전부 지워준다.
+
+* Ajax(리액트로 서버와 통신하기)
+    - 웹페이지를 만들때 제품 더보기 파일 등 그때그때 새로 업로드 해야하는 파일들은 대부분 서버에서 가져온다.
+    - 서버에서 데이터를 가져오는 행위를 하려면 크게 2가지를 알아야 하는데 바로 "서버"와 "요청"이다.
+    - "서버"란 간단하게 말하면 "부탁하면 진짜 들어주는 프로그램"이다.
+        ex) youtube서버 == 동영상 요청하면 진짜로 동영상 보내주는 프로그램
+            네이버웹툰서버 == 웹툰 요청하면 진짜로 웹툰 보내주는 프로그램
+    - 그래서 서버를 개발할 때 짜는 코드는 "누가 A 요청하면 A 보여주세요"라는 코드로 작성한다.
+    - 이렇게 서버에서 데이터를 요청하는 코드를 짤 때에는 세부적으로 코드를 잘 짜야 한다.
+        1. 어떤 방법(get / post)으로 2. 어떤자료(url)를 적어보내라.
+        * 내가 직접 만든 서버가 없으니 일딴 애플쌤이 만든 서버에서 데이터를 가져올거다.
+    - ajax 문법을 사용하려면 3가지 중 1개를 선택해야 한다.
+        1. 옛날문법(XMLHttpRequest)
+        2. 요즘문법(fetch())
+        3. axios같은 외부라이브러리
+    - 이번엔 외부라이브러리를 이용해 볼 것이다.
+        * axios 사용법
+            1. 터미널을 열어 "npm install axios"를 입력해 axios를 설치한다.
+            2. 사용할 파일에 "import axios from "axios""를 입력하여 기능을 추가시킨다.
+            3. 사용할 기능(function)에 axios.get("서버주소")를 입력하면 서버랑 연결이 된다.
+            4. 그 후에 "axios.get("서버주소").then((서버데이터파라미터)=>{})"로 "then"문법을 이용해 function기능을 만들면 then 파라미터 안에 서버 내용이 json파일로 저장된다.
+            5. 파라미터 안에 저장된 내용을 데이터로 전환 시키려면 "서버데이터파라미터.data"를 입력하면 데이터 형태로 변환된다.
+            6. 대부분의 리액트 작업에선 서버와 ajax를 이용해서 통신한다.
+    
+    * ajax요청이 실패했을때
+        - 만약 인터넷이 끊기거나 오류로 인해 서버 요청이 실패할 경우에 서버전송이 실패됐음을 알리는 코드를 작성하는 방법이 있다.
+        - ajax 코드의 끝에 ".catch(()=>{})"문법을 붙여 안에 코드를 작성하면 서버전송에 실패했을때 해당 코드가 작동하게 된다.
+
+* post(ajax 서버로 데이터 보내기)
+    - "get"문법으로 서버에서 데이터를 가져오는 것과 반대로 "post"문법을 사용하면 서버로 데이터를 보낼 수 있다.
+    - "axios.post("서버주소", {"작명" : "내용"})"이렇게 코드를 만들면 해당 서버주소로 object에 담긴 내용을 보낼 수 있다.
+    * 서버에서 데이터를 주고받을때 무조건 문자로 된 자료만 주고받을 수 있다(array, object형 자료 안 됨.)
+        - 그래서 서버로 데이터를 전송할때엔 자료의 작명과 내용에 따옴표("")을 붙여야 데이터를 전송할 수 있다.
+            ex) axios.post('https://codingapple1.github.io/shop/data3.json', "{"name" : "kim"}") 이것을 json이라고 부른다.
+        - 반대로 우리가 서버에서 데이터를 받아올땐 서버에선 json이었던 파일을 axios라이브러리가 array / object파일로 변환해줘서 ".data"만 붙이면 바로 사용이 가능한 것이다.
+        - 바닐라js로 받아오려면 추가 문법들을 사용해야한다.
+
+* Promise.all()(동시에 데이터를 받고 싶을때)
+    - 서버에서 여러 데이터를 한 번에 받고 싶으면 promise문법을 사용하면 된다.
+    - "Promise.all([axios.get("서버주소1"), axios.get("서버주소2)])" 이렇게 promise.all 파라미터 안에 넣은 array에 가져올 서버주소들을 입력하면 한꺼번에 데이터를 가져올 수 있다.
+    - 그 후엔 똑같이 .then()으로 문법을 이어나가면 된다.
+
+* fetch(js에 기본적으로 있는 ajax문법) 사용시 json파일 변환시키는 법
+    - js 기본문법 "fetch()"로 서버에서 데이터를 받아오려면 다음과 같이 문법을 짜면 된다.
+    - "fetch("서버주소").then((파라미터) => 파라미터.json())" 또는 "fetch("서버주소").then(data => {})"를 사용하면 array나 object로 변환해준다고 한다.
+    - 아직 안 써봤으니 나중에 한번 써보는 연습해보자.
+    
+* tab UI 만들어보기(동적인UI만들기)
+    - 만드는 방법은 useState를 활용하면 js에서 동적인 UI 만들던 것 보다 훨씬 쉽게 만들 수 있다.
+    - ui네비게이션 역할을 할 버튼들을 먼저 만들고 디자인한다. + ui페이지들을 디자인 한다.
+    - ui네이게이션 버튼을 클릭할 때 값이 바뀌게 할 useState를 하나 만든다(트리거 역할)
+        ex) let [trigger, settrigger] = useState(0)  <= 여기서 useState에 들어가는 값은 ui의 형태를 생각해서 자유롭게 만들면 된다.
+    - ui네비게이션 버튼에 onClick 이벤트를 만들어 해당 버튼을 클릭하면 settirgger을 사용해 trigger state의 값을 변경시키게 만든다.
+        ex) <button onClick={()=>{settrigger(1)}}>1</button>
+    - {}(삼항연산자) 안에 ? :문을 넣거나, if문을 사용해 trigger의 값이 ~~일 때 특정 ui페이지를 보여주는 코드를 만들면 끝이다.
+        ex) {
+                trigger == 1 ? <div>1번 내용입니다.</div> : null
+            }
+    * if문 컴포넌트로 만들어서 사용하기
+        - html 안에서 사용하지 못하는 if문을 컴포넌트로 만들어서 html안에 집어넣으면 동작을 한다.
+            ex) 
+                function if문컴포넌트화(){
+                    if(trigger == 1){
+                        return <div>1번 내용입니다.</div>
+                    }
+                }
+        * 주의점으로 컴포넌트 안에 if문을 넣는거라 return을 꼭 넣어야 if문 안에 코드가 실행된다.
+        * 추가로 메인 컴포넌트 바깥에 if문을 서브컴포넌트로 만들려면 props기능으로 trigger state를 가져오는 것을 잊어선 안된다.
+            ex) <if문컴포넌트화 trigger = {trigger}/>           * html에 집어넣는 컴포넌트에 props전달할 변수 집어넣기!
+
+                function if문컴포넌트화(props){                      * 컴포넌트 파라미터에 props넣고 state 사용!
+                    if(props.trigger == 1){
+                        return <div>1번 내용입니다.</div>
+                    }
+                }
+
+* props팁
+    - props로 데이터를 가져올 때 굳이 귀찬게 props.~~~로 코드를 작성할 필요 없다.
+    - 컴포넌트 파라미터에 props 대신 가져오는 변수의 이름들을 {}(클로저)로 감싸면 변수명만 입력해서 값을 얻을 수 있다.
+        ex) function if문컴포넌트({trigger, ~~}){                <== props. 없이 가능!
+            if(trigger == 1){
+                return <div>1번 내용입니다.</div>
+            }
+            console.log(~~)                                     <== props. 없이 가능!
+        }
+
+* transition(react 사용해면서 애니메이션 효과 넣기)
+    - className을 통해 css로 애니메이션 효과를 넣으면 끝이다.
+    - 그냥 html, css랑 똑같은 개념이다.(class만 className으로 바뀜)
+    - 라고 생각했는데 애니에이션을 주기위해 className을 바꾸는 방식이 js랑 다르다.
+    - 우선 useState를 통해서 className의 이름을 바꾸거나 추가하거나 삭제할 수 있다.
+    - useState로 유동적인 className을 만들고 useEffect를 사용하여 훅기능을 통해 특정 부분이 실행될 때 className을 변경하면 애니메이션 작동 트리거를 만들 수 있다.
+        ex) let [class, setclass] = useState('off')
+            useEffect(()=>{
+                setclass('on')
+            }, [훅])
+            * 최초 페이지 Mount시에만 useEffect를 작동시키려면 [](디펜던시 어래이)그대로 남겨놓으면 된다.
+    * 유동적인 className 만들기
+        - 유동적인 className 만드는 법은 다음과 같다.
+            1. className={} 이렇게 "" 대신 클로저({})로 먼저 감싸고 그 안에 state나 className을 집어넣으면 된다.
+            2. 두 개 이상의 className을 작성하고 싶으면 중간에 +를 집어넣거나 ``을 이용하면 된다.
+                ex) className={변수 + 변수} / className={"className " + 변수} <= 주의사항으로 className 사이에 띄워쓰기를 집어넣어야 className이 붙지 않고 따로따로 적용된다.
+                    className={`변수 변수`} / className={"className" + 변수} <= 이렇게 ``을 사용하면 className 끝이 띄워쓰기를 사용할 필요 없어 나는 이걸 더 추천한다.
+        - useEffect에 return문과 setTimeOut함수를 이용해 className이 추가되고 사라지는 시간들을 조정하면 더욱 세밀한 애니메이션 작업을 할 수 있다.
+            ex) useEffect(()=>{
+
+                    setTimeout(()=>{
+                        setclass('on')
+                    }, 100)                         <= setTimeout함수로 0.1초 후에 class를 'on'으로 변경
+
+                    return(
+                        setclass('off')             <= return문으로 useEffect함수 작동시 제일 먼저 class를 'off'로 변경
+                    )
+
+                }, [])
+
+* contextAPI(props 쓰기 싫을 때 사용하는 리액트 문법)
+    - 리액트에서 state를 자식으로 전송하는 기능이 있다.
+    - 그런데 자식의 자식에게 다이렉트로 state를 전송할 순 없다.
+        ex) 부모 (state)
+            자식        <= state전송 가능
+            자식의 자식  <= state전송 불가능
+    - 자식에게 먼저 state를 전송하고 그 자식의 state를 자식의 자식에게 주어야 전송이 가능하다.
+    - 한 2개 정도 자식들이 있는 거라면 그나마 괜찮겠지만 자식들이 9개, 10개 이렇게 된다면 코드가 매우 복잡해질 거 같다.
+    - 이를 해결하기 위한 리액트 기본문법이나 외부라이브러리가 있다.
+        1. Context API(리액트 기본문법)
+        2. Redux등 외부라이브러리
+    1. Context API
+        1. createContext()를 부모 컴포넌트가 있는 파일에 적으면 자동으로 react에서 context를 import 해오는 코드가 작성된다.
+        2. 변수를 하나 만들어 createContext 컴포넌트를 하나 만들고 해당 파일 앞에 export를 붙여준다.(여기서 context는 쉽게 생각하면 state들을 담는 포장용기라고 생각하면 된다. + export를 붙여 사용할 자식 파일에 import해줄거임)
+            ex) export let Context1 = createContext()     *컴포넌트로 만들거기 때문에 변수 앞글자가 대문자여야 한다.
+        3. state를 전송받을 자식 컴포넌트를 만들어놓은 createContext컴포넌트로 감싼다.(컴포넌트 뒤에 .Provider을 붙여줘야 한다.)
+            ex) 
+                <Context1.Provider>
+                    <Child/>
+                </Context1.Provider>
+        4. 감싼 context컴포넌트에 value={{}}를 붙여 안에 전송할 state들을 입력한다.
+            ex) 
+                <Context1.Provider value={{state1, state2}}>
+                    <Child/>
+                </Context1.Provider>
+        5. 다 입력했으면 자식 컴포넌트 파일에 들어가 createContext()를 입력해 해당 파일에도 createContext기능을 react에서 import 해온다.
+        6. "import {context1} from "./부모파일경로"를 입력해 export한 context1파일을 자식컴포넌트 파일로 import해온다.
+        7. "let {state1, state2} = useContext(context1)" 이렇게 useContext를 이용해 context1안에 들어있는 state들을 풀고 let 변수 안에 클로저({})에 필요한 state들 이름을 입력하면 해당 state들이 변수로 저장되어 사용할 수 있게 된다.
+
+        - 이렇게 context로 변수를 만들면 해당 자식요소 뿐 만 아니라 자식요소 전역에(자식의 모든 족보)해당 state를 사용할 수 있게 된다.
+        - 하지만 Context API는 사용에 있어 비효율적인 측면이 있다.
+            1. Context API는 결국 자식 컴포넌트에 전역으로 퍼지는 컴포넌트를 감싸는 것이라 해당 context를 사용하지 않는 자식요소까지 리랜더링을 시키게 된다.
+            2. useContext를 사용하고 있는 컴포넌트를 다른 파일에서 재사용하게 될 때 Context를 import 하는게 귀찮아 질 수 있다
+                (useContext를 쓰고있는 자식 컴포넌트를 부모 컴포넌트가 아니라 다른 자식 컴포넌트 파일에 집어넣으면 context가 작동이 안되는건가? 안해봐서 모름)
+    
+    * 그래서 이것보단 redux같은 외부라이브러리를 많이들 쓴다고 한다.
+
+    2. redux라이브러리(+장바구니 페이지 만들기)
+        1. pakage.json 파일로 들어가서 react-dom파일이 18.1.0버전 이상인지 확인한다.(이하 버전이면 redux설치가 안된다.)
+        2. 터미널에 들어가서 "npm install @reduxjs/toolkit react-redux"를 입력해 redux를 설치한다.
+        3. redux를 사용하기 위한 커멘더 파일이 하나 필요하므로 "store.js"파일을 하나 새로 만든다.(대부분 redux작업을 할 때 커멘드 파일을 store.js로 저장함.)
+            * 해당 파일에 파일 전역에 퍼지는 state를 만들거임.
+        4. 만든 store.js파일로 들어가서 redux에서 configureStore기능을 import 해온다.
+            ex) import {configureStore} from "@reduxjs/toolkit"    <= redux페이지 경로는 @reduxjs/toolkit이다.
+        5. store.js파일 최하단에 configureStore기능을 예시와 같이 export해준다.
+            ex)
+                export default configureStore({
+                    reducer : {
+
+                    }
+                })
+        6. index.js파일로 넘어와 BrouserRoute컴포넌트로 감싸져 있는 컴포넌트에 Provider컴포넌트로 감싸준다.
+            ex) 
+                <React.StrictMode>
+                    <Provider>
+                        <BrowserRouter>
+                            <App />
+                        </BrowserRouter>
+                    </Provider>
+                </React.StrictMode>
+        7. Provider컴포넌트에 props 기능을 넣듯이 store변수를 집어넣어주면 초기설정이 완료된다.
+            ex) 
+                <React.StrictMode>
+                    <Provider store={store}>
+                        <BrowserRouter>
+                            <App />
+                        </BrowserRouter>
+                    </Provider>
+                </React.StrictMode>
+            
+            * store을 넣을때 파일에 store변수가 store.js파일에서 import되어야 사용이 가능한데 보통 Provider컴포넌트 안에 store변수를 넣으면 자동으로 코드가 작성되지만 제대로 작동이 되지 않는다면 한번 확인해보자.
+                ex) 
+                    import store from "./store"
+
+    2-1. store 안에 컴포넌트 전역으로 사용할 state 만들기(Redux 실제 사용)
+        * 이렇게만 하면 props를 만들 필요가 없다.
+
+        1. store.js 파일에 "createSlice()"를 적어 Redux로 부터 createSlice 기능을 import 해온다.
+            - createSlice({}) <= react에서 state와 비슷한 역할을 함.
+        2. "createSlice({})" 이렇게 만든 후 클로저 안에 object처럼 "name : "state이름"" + "initialState : "값"" 이 두가지를 추가시키면 state 하나가 완성된다.(name == let 변수 역할, initialState == useState()에 들어가는 값 역할)
+            ex) createSlice({
+                    name : '~~~',
+                    initialState : '~~~'
+                })
+        3. 다 만든 createSlice함수를 변수로 저장하여 state를 다른 컴포넌트에 전송할 준비를 한다.
+            ex) let 변수1 = createSlice({
+                    name : '~~~',
+                    initialState : '~~~'
+                })
+                let 변수2 = createSlice({
+                    name : '~~~',
+                    initialState : '~~~'
+                })
+        4. store.js파일 하단에 만든 configureStore함수에 "작명 : 변수.reducer" 이렇게 코드를 작성하면 다른 컴포넌트로 state를 옮길 준비가 완전히 끝난다.
+            ex) export default configureStore({
+                reducer : {
+                    작명 : 변수1.reducer,
+                    작명2 : 변수2.reducer
+                }
+            })
+        5. 원하는 컴포넌트 함수 파일에 들어가서 "useSelector((state=>{return state}))"을 사용하면 Redux store 안에 있는 state들을 가져와준다. 그리고 해당 함수를 변수로 저장하면 사용 준비가 끝난다.
+            ex) 
+                function 컴포넌트(){
+                    let 작명 = useSelector((state=>{return state}))
+
+                    return(
+                        ~~~
+                    )
+                }
+        6. 이렇게 변수로 저장한 useSelector기능은 object형식으로 state들이 저장되어서 object를 부르는 형식대로 코드를 작성하면 state 값을 사용할 수 있다.
+            ex)
+                console.log(작명.user) == {user : 'kim'}
