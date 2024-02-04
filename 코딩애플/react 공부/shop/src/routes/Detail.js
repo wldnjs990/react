@@ -3,6 +3,8 @@ import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import {Context1} from "./../App.js"
+import { plusobject } from "./../store.js";
+import { useDispatch, useSelector } from "react-redux";
 
 // styled-components
   let Yellowbtn = styled.button`
@@ -28,7 +30,8 @@ import {Context1} from "./../App.js"
   let Alertbox = styled.span`
   color : red;
   `
-  
+
+
 
 /* 상세페이지 */
 const Detailpage =
@@ -37,6 +40,10 @@ function (props){
   //context파일 가져온 내용물 열고 변수로 저장하기
   let [blink, setblink] = useState('blink-off')
   // detail 페이지 업로드시 깜빡거리는 애니메이션 만들기
+  let dispatch = useDispatch()
+  // Redux dispatch 사용하기
+  let a = useSelector(state => state)
+  // useSelector 사용하기
 
 
     useEffect(()=>{
@@ -107,7 +114,10 @@ function (props){
             <h4 className="pt-5">{pageobj.title}</h4>
             <p>{pageobj.content}</p>
             <p>{pageobj.price}</p>
-            <button className="btn btn-danger">주문하기</button>      
+            <button className="btn btn-danger" onClick={()=>{
+              dispatch(plusobject(pageobj))
+              console.log(a.products)
+            }}>주문하기</button>      
           </div>
         </div>
         <div className="tab" style={{marginTop : "10px"}}>

@@ -483,6 +483,141 @@
                         ~~~
                     )
                 }
-        6. 이렇게 변수로 저장한 useSelector기능은 object형식으로 state들이 저장되어서 object를 부르는 형식대로 코드를 작성하면 state 값을 사용할 수 있다.
+        6. 이렇게 변수로 저장한 useSelector기능은 object형식으로 state들이 저장되어서 object 형식대로 코드를 작성하면 state 값을 사용할 수 있다.
             ex)
                 console.log(작명.user) == {user : 'kim'}
+    
+    2-2. Redux에서 state 변경하기
+        - Redux에서 state를 수정하는 법은 다음과 같다.
+            1. state를 수정해주는 함수를 만든다.
+            2. 원할 때 그 함수를 실행해달라고 store.js에 요청한다.
+        - Redux의 state변경 방식은 과정이 매우 복잡하고 귀찮은데 대신 버그가 터졌을때 디버깅 하는 과정에서 유용하기 때문에 어려워도 배워야 한다.
+        
+        * Redux에서 state변경하기 (reducers : {} / .action / useDispatch())
+            1. store.js에 만들어놓은 createSlice함수에 "reducers : {}"를 추가한다.
+            2. reducers 클로저 안에 state를 변경하는 함수를 직접 만든다.
+                ex)
+                    let user = createSlice(){
+                        name : "user",
+                        initialState : "kim",
+                        reducers : {
+                            이름변경1(() => 
+                                return "john kim"
+                            ),
+                            이름변경2(() =>
+                                return "kim sung"
+                            )
+                        }
+                    }
+
+                * 참고로 state를 변경하는 함수를 만들때 파라미터 안에 함수를 집어넣으면 해당 state의 기본값을 가져올 수 있다.
+                    ex)
+                        let user = createSlice(){
+                            name : "user",
+                            initialState : "kim",
+                            reducers : {
+                                이름변경1((state) => 
+                                    return "john " + state         <= 이러면 state의 기본값이 "kim"이니 "john kim"으로 state가 변경된다.
+                                ),
+                                이름변경2((state) =>
+                                    return state + " sung"         <= 이러면 state의 기본값이 "kim"이니 "sung kim"으로 state가 변경된다.
+                                )
+                            }
+                        }
+            3. store.js에 만든 함수를 export해야 다른 파일에서 state를 사용할 수 있어 export를 해줘야 한다.
+                - 해당 state변경함수를 export하는 방법은 좀 특이하다.
+                    1. createSlice()함수의 name 값 + .actions 이렇게 코드를 짜면 reducers : {}로 만든 모든 state변경 함수 값들이 그 자리에 출력되게 만든다.
+                        ex) 
+                            user.actions == ["john kim", "kim sung"]
+                    2. 해당 코드를 변수로 저장해 변수 클로저 안에 필요한 함수명을 입력해놓으면 그 state변경값이 따로 저장된다.
+                        ex)
+                            let {이름변경1} = user.actions
+                            console.log(이름변경1()) == "john kim"
+                    3. 변수 전체를 export 하면 export할 준비가 끝난다.
+                        ex)
+                            export let {이름변경1, 이름변경2} = user.actions
+            4. export가 끝났다면 state를 변경할 파일에 들어가 export한 변수를 import 해온다.
+                ex)
+                    import {이름변경1, 이름변경2} from "./../store.js"
+            5. export해온 state변경함수를 사용하기 위해선 useDispatch()라는 함수를 감싸줘야 하기 때문에 useDispatch기능을 Redux에서 가져와 변수로 저장한다.
+                ex)
+                    import {useDispatch} from "react-redux"
+
+                    let dispatch = useDispatch() 
+                
+                * useDispatch함수는 Redux의 기능을 사용하고 있는 본진에게 해당 기능을 실행해달라 요청해주는 역할을 한다.
+                    ex) state변경함수를 사용하려고 하는데 해당 변경함수는 store.js의 createSlice()함수 안에 만들어져 있으니 store.js가 본진이라 할 수 있고 본진에게 해당 state변경 함수를 실행시켜달라 요청하게 되는 것이다.
+            6. dispatch변수를 사용해 한번 감싸준 후 그 안에 state변경함수를 집어넣으면 store.js파일에게 state변경을 요청해 state가 변경된다.
+                ex)
+                    let a = useSelector((state) => state);
+
+                    dispatch(이름변경1())
+
+                    console.log(a.user) == "john kim"
+        
+        - 이렇게 state변경 함수를 만들면 이점이 있다.
+
+            이점) 컴포넌트를 수백가지를 사용하고 있는 프로젝트에서 state가 이상한 값으로 변경이 되는 버그가 발생할 시 본진인 store.js만 오류를 체크하면 해결할 수 있다.
+                - state들을 컴포넌트에서 직접 변경을 하는 것이 아닌 본진에서 변경하도록 요청하는 것이라 본진만 디버깅을 하면 된다.
+    
+    2-3. Redux state 변경시 state자료가 array나 object일 때
+        - state가 array나 object일 경우 바꾸고 싶은 위치를 기존 array, object방식대로 추적해서 변경시키면 된다.
+            ex)
+                let obj = createSlice({
+                    name : 'obj',
+                    initialState : [
+                        {name : "kim", count : 1},
+                        {name : "park", count : 2}
+                    ]
+                    reducer : {
+                        obj변경((state) => 
+                            state[0].name = "john"
+                        )
+                    }
+                })
+
+                console.log(obj[0].name) == "john"
+    
+    2-4. Redux state변경함수 파라미터 활용법
+        - Redux의 state변경함수에 파라미터는
+            1. 첫번째 파라미터 함수를 만들면 그 함수는 변경하는 state의 기본값을 가진다.
+                ex)
+                    let ex = createSlice({
+                        name : 'ex',
+                        initialState : 1             <= state의 기본값 == 1
+                        reducer : {
+                            ex변경((a) => 
+                                a =+ 1               <= 첫번째 파라미터 안에 담긴 값은 state의 기본값이므로 a의 값은 1
+                            )
+                        }
+                    })
+
+                    다른 파일로 넘어옴
+
+                    let a = useSelector(state => state)
+
+                    dispatch(ex변경());
+
+                    console.log(a.ex) == 2
+                    
+            
+            2. 두번째 파라미터 함수를 만들면 그 함수는 유동적으로 값을 바꿀 수 있는 값이 된다.
+                ex)
+                    let ex = createSlice({
+                        name : 'ex',
+                        initialState : 1             
+                        reducer : {
+                            ex변경((a, i) => 
+                                a =+ i               <= i가 두번째 파라미터에 담겼으므로 유동적으로 변하는 값이 됨
+                            )
+                        }
+                    })
+
+                    다른 파일로 넘어옴
+                    
+                    let a = useSelector(state => state)
+
+                    dispatch(ex변경(5))              <= state변경함수 파라미터에 5를 집어넣어서 i의 값은 5가 된다.
+
+                    console.log(a.ex) == 6
+                   
