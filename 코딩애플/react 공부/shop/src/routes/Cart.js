@@ -1,6 +1,6 @@
 import { Table } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux";
-import { changeName, changeCount , setcount} from "./../store";
+import { changeName, changeCount , setcount, deletobject} from "./../store";
 
 function Cartpage(){
 
@@ -16,7 +16,8 @@ function Cartpage(){
                         <th>#</th>
                         <th>상품명</th>
                         <th>수량</th>
-                        <th>etc</th>
+                        <th>수량 추가</th>
+                        <th>삭제</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +26,7 @@ function Cartpage(){
                             return(
                                 <tr key={i}>
                                     <td>{"no." + i}</td>
-                                    <td>{a.products.find(e => e.id == a.products[i].id).name}</td>
+                                    <td>{a.products.find(e => e.id == a.products[i].id).title}</td>
                                     <td>{a.products.find(e => e.id == a.products[i].id).count}</td>
                                     <td>
                                         <button onClick={() => {
@@ -33,6 +34,13 @@ function Cartpage(){
                                                 dispatch(setcount(i))
                                                 )
                                         }}>+</button>
+                                    </td>
+                                    <td>
+                                        <button onClick={()=>{
+                                            return(
+                                                dispatch(deletobject(i))
+                                            )
+                                        }}>X</button>
                                     </td>
                                 </tr>
                             )  

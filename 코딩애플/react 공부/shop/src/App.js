@@ -5,7 +5,7 @@ import logo from './logo.svg';
 import "./App.css"
 import { createContext, useEffect, useState } from 'react';
 import img from '../src/cat4.jpg';
-import {a, b, c} from "./data.js";
+import {a, b, c, d} from "./data.js";
 import data from "./data.js";
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
 import Detailpage from './routes/Detail.js';
@@ -33,6 +33,7 @@ function App() {
             <Nav.Link onClick={() => {navigate('/')}}>{a}</Nav.Link>
             <Nav.Link onClick={() => {navigate('/Detail/0')}}>{b}</Nav.Link>
             <Nav.Link onClick={() => {navigate('/About')}}>{c}</Nav.Link>
+            <Nav.Link onClick={() => {navigate('/Cart')}}>{d}</Nav.Link>
             </Nav>
           </Container>
         </Navbar>

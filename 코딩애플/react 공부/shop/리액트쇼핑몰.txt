@@ -586,7 +586,7 @@
                         name : 'ex',
                         initialState : 1             <= state의 기본값 == 1
                         reducer : {
-                            ex변경((a) => 
+                            ex변경((a) =>            <= 파라미터 첫번째칸에 a 함수를 만들었음
                                 a =+ 1               <= 첫번째 파라미터 안에 담긴 값은 state의 기본값이므로 a의 값은 1
                             )
                         }

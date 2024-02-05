@@ -115,8 +115,10 @@ function (props){
             <p>{pageobj.content}</p>
             <p>{pageobj.price}</p>
             <button className="btn btn-danger" onClick={()=>{
-              dispatch(plusobject(pageobj))
-              console.log(a.products)
+              {
+                console.log(a.products.find(e => e.id == pageobj.id) == undefined)
+                a.products.find(e => e.id == pageobj.id) == undefined ? dispatch(plusobject(pageobj)) :  null
+              }
             }}>주문하기</button>      
           </div>
         </div>

@@ -26,19 +26,34 @@ let stock = createSlice({
 let products = createSlice({
     name : 'products',
     initialState : [
-        {id : 0, name : 'White and black', count : 2},
-        {id : 2, name : 'grey yordan', count : 1}
+        {
+            id : 0,
+            title : "White and Black",
+            content : "나이스한 신발.",
+            price : 120000,
+            count : 0
+          },
+          {
+            id : 2,
+            title : "Grey Yordan",
+            content : "편한 신발",
+            price : 130000,
+            count : 0
+          }
     ],
     reducers : {
         setcount(state, action){
-            state[action.payload].count++
+            state.find(a => a.id == state[action.payload].id).count++
         },
         plusobject(state, action){
             state.push(action.payload)
+        },
+        deletobject(state, action){
+            state.splice(action.payload, 1)
         }
     }
 })
-    export let {setcount, plusobject} = products.actions
+export let {setcount, plusobject, deletobject} = products.actions
 
 
 export default configureStore({
