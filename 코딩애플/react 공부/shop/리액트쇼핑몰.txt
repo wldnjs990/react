@@ -620,4 +620,262 @@
                     dispatch(ex변경(5))              <= state변경함수 파라미터에 5를 집어넣어서 i의 값은 5가 된다.
 
                     console.log(a.ex) == 6
-                   
+
+    * 리액트에서 자주쓰는 if문 작성패턴
+        - jsx로 작성하는 html에서는 if문은 대체하기 위해서 삼항연산자(? :)을 사용해야 하지만 컴포넌트를 만들어 if문을 만든다면 jsx 안에서 if문을 사용할 수 있다.
+            ex) 
+
+                function Main(){
+                    return(
+                        <Component/>        <= 컴포넌트로 집어넣어서 if문 사용
+                    )
+                }
+
+                function Component(){
+                    if(true){
+                        console.log("참")
+                    }
+                }
+    
+        - 가끔씩 이렇게 if문을 만들어서 사용하면 되게 편할 것 같은 상황이 종종 생기는데 실제로 리액트에서 자주쓰는 if문 예시 5가지를 준비했다.
+            1. else 사용하지 않고 if문 만들기
+                ex) 
+                    fuction Component(){
+                        if(true){
+                            return <p>참이면 보여줄 HTML</p>
+                        }
+                        return null;
+                    }
+                
+                - 이 방식은 if문이 한개인 경우에 코드를 축약하기 좋은 방식이다.
+                - return문을 사용하면 그 아래에 있는 코드들은 실행을 중지하는 특성을 이용해 if문이 참이면
+                  "<p>참이면 보여줄 HTML</p>"이 실행되고 밑에 코드부턴 사용이 중지되고 if문이 거짓이면 if문 아래에 있는 return문이 작동한다.
+                - 이 방식은 else문과 똑같은 역할을 하기에 코드를 더 줄이고 싶을때 사용하면 된다.
+            
+            2. jsx 안에 삼항연산자 집어넣기(+ 삼항연산자도 else if 기능을 쓸 수 있다.)
+                ex)
+                    let a = true;
+                    
+                    function Main(){
+                        return(
+                            {
+                                a == true ? console.log('참') : null
+                            }
+                        )
+                    }
+                
+                - 이미 배워서 알겠지만 jsx에서 if문을 사용하려면 다음과 같이 표현하면 된다.
+                - 그런데 else if 기능을 추가로 사용할 수 있는 방법이 또 있다.
+                ex)
+                    let a = false;
+                    let b = true;
+                    
+                    function Main(){
+                        return(
+                            {
+                                a == true ? console.log('참') : (b == true ? console.log('참') : null)
+                            }
+                        )
+                    }
+                - 이렇게 else문을 집어넣는 공간에 클로저()를 만들어 그 안에 다시 삼항연산자를 집어넣으면 else if와 동일한 기능을 수행한다.
+                - 하지만 이렇게 코드를 짜면 가독성이 매우 떨어지니 웬만하면 if문을 컴포넌트로 사용하거나 코드를 하나 더 작성하는걸 추천함.
+            
+            3. &&연산자로 if 역할 대신하기
+                - 연산자 중에 &&연산자가 있다.
+                - 이 연산자의 특성은 코드를 차례대로 읽다가 중간에 하나라도 false값을 내는 코드를 찾으면 코드가 중단되는 특성을 가지고 있다.
+                    ex)
+                        true && console.log(1)    <= 1 출력됨
+                        false && console.log(1)    <= 1 출력 안됨
+                
+                - 이런 특성을 이용해서 삼항연산자를 사용하지도, if문을 사용하지도 않고 똑같은 기능을 수행하는 코드를 만들 수 있다.
+                ex)
+                    let a = true;
+                    
+                    fucntion Main(){
+                        return(
+                            {a == true && <p>값 출력</p>}
+                        )
+                    }
+                - 이런 코드는 if문이나 삼항연산자를 사용할 때 else의 값이 null일 경우에 더 축약된 코드를 대체하는 용도로 자주 쓰인다.
+
+            4. switch / case 조건문
+                - switch / case 문법은 참인지 구분할 대상이 하나밖에 없는 경우에 클로저{}를 줄일 용도로 사용하게 된다.
+                    ex)
+                        let a = 100;
+
+                        switch(a){
+                            case 1000 :
+                                return console.log('거짓')
+                            case 100 :
+                                return console.log('참')
+                            default :
+                                return console.log('거짓')
+                        }
+                - 이렇게 사용하면 case는 if와 else if역할을 하고 default는 else의 역할을 한다.
+                - 하지만 구분할 대상이 여럿인 문법에선(if(a == true && b == true){})사용할 수 없다.
+            
+            5. object / array 자료형 응용({}[])
+                ex)
+                    function Main(){
+                        let [a, seta] = useState("info")
+
+                        return(
+                            <div>
+                                {
+                                    {
+                                        info : <p>상품정보</p>,
+                                        shipping : <p>배송관리</p>, 
+                                        refund = <p>환불약관</p>
+                                    }[a]
+                                }
+                            </div>
+                        )
+                    }
+                - 다음과 같이 jsx에서 대괄호[]안에 담긴 state의 값에 따라 object 안에 들어가 있는 값을 보여주는 문법을 만들었다.
+                - 이 문법을 사용하면 state의 값이 변하면 다른 html을 보여주는 문법을 만들때 매우 간결하고 직관적으로 문법을 만들수 있는 장점이 있다.
+                - 이건 아마 state변경을 자주하는 react 하면서 많이 쓸 거 같다.
+                * 변수에 object를 저장해서 컴포넌트 안에서 깔끔해 보이게 코드를 짤 수도 있다.
+                    ex)
+                        let 탭UI = {
+                            info : <p>상품정보</p>,
+                            shipping : <p>배송관리</p>, 
+                            refund = <p>환불약관</p>
+                        }
+
+                        function Main(){
+                            let [a, seta] = useState("info")
+
+                            return(
+                                <div>
+                                    {
+                                        탭UI[a]
+                                    }
+                                </div>
+                            )
+                        }
+                    - 근데 이건 취향차이다.
+    
+    * local storage(로컬 저장소에 데이터 저장시키기)
+        - 페이지를 새로고침하면 변경되었던 함수나 state들이 초기화 된다.
+        - 사이트 재접속시에도 바꾼 정보들을 유지시키고 싶다면 데이터를 서버로 보내서 DB(데어터베이스)에 영구저장 하는 방법이 있다.
+        - 하지만 서버도 모르고 DB도 잘 모르는 나는 일단 local storage에 저장해서 사용하는 법 부터 배워야 할 거 같다.
+        - local storage는 데이터를 반영구적으로 저장할 수 있는 공간이다.
+            * local storage의 위치는 개발자도구(f12) -> Application에 들어가면 나온다.
+        - local storage 안엔 문자 데이터만 저장시킬 수 있으며, object처럼 key / value의 형태로 저장할 수 있다.
+        - local storage에는 최대 5mb의 데이터를 저장할 수 있다.
+        - 유저가 브라우저를 청소하는 일이 없으면 아무리 사이트를 재접속해도 데이터가 남아있는다.
+            * 사용방법
+                - localStorage.setitem('','')을 사용해서 ''안에 각각 key값, value값을 집어넣으면 local storage에 등록된다.
+                - localStorage.getitem('')을 사용해서 ''안에 local storage에 저장해둔 key값을 입력하면 해당 value를 반환해준다.
+                - localStorage.removeitem('')을 사용해서 ''안에 local storage에 저장해둔 key값을 입력하면 해당 값을 local storage에서 삭제시킨다.
+                    * local storage를 수정하는 명령어는 없다. 그래서 데이터를 수정하려면 데이터를 꺼내서 수정하고 다시 집어넣어야 한다.
+            * local storage에 array / object 집어넣기(+ json 사용법)
+                - local storage엔 문자밖에 못 집어넣기 때문에 사실상 array / object를 담을 수 없다.
+                - 하지만 데이터를 json형식으로 바꾸어 저장하면 사용할 수 있는 편법이 있다.
+                - json형식은 object나 array 자료들의 값에 전부 따옴표('')을 붙이면 된다.
+                    ex) {'name' : 'kim'}
+                - JSON.stringfy()를 사용하면 ()안에 array나 object를 집어넣으면 json형태로 변환시켜준다.
+                    ex) JSON.stringfy({name : 'kim'}) == {'name' : 'kim'}
+                - JSON.parse()를 사용하면 ()안에 json문법을 넣으면 형식에 따라 array / object형태로 변환시켜준다.
+                    ex) JSON.parse({'name' : 'kim'}) == {name : 'kim'}
+                - 이렇게 json파일로 변환한 문자를 local storage에 저장해뒀다 parse문법으로 변환시켜 사용하면 된다.
+
+    * session storage
+        - session storage는 브라우저를 끄면 안에 있던 데이터들이 초기화 되는 저장공간이다.
+            * 사용방법은 local storage와 동일하며 localStorage 대신 sessionStorage를 집어넣으면 된다.
+
+    * new Set(중복배열 제거하기)
+        - 애플쌤 만드신거 보니깐 new가 let같은 변수 역할인거 같다.
+        - [...new Set(array나 object자료)] 이렇게 만들면 () 안에 유니크한 값들만 남기게 해서 중복되는 값들은 전부 제거되고 하나로 통일된다.
+        - es6문법이라는데 이유는 잘 모르겠는데 저렇게 [...]으로 array를 한번 지웠다 다시 씌워야 하는거 같다.
+
+    * redux-persist
+        redux에서 제공하는 local storage 기능인데 한번 검색해보셈
+    
+* redux와 비슷하지만 더 쉬운 라이브러리
+    1. jotai
+    2. zustand
+        - 그런데 취업 더 빨리 하고 싶으면 redux떡칠된 포트폴리오를 만들것
+
+* react-query(실시간 데이터가 중요한 상황이라면 사용할 라이브러리 리액트쿼리)
+    - ajax로 서버에서 데이터를 불러오면 여러가지 실시간 반응 기능들을 생각해볼 수 있다.(코인 거래사이트 등)
+        ex) ajax 성공 / 실패시 html 보여주기, 몇초마다 자동으로 ajax요청하기, 실패시 몇초 후 요청재시도 하기, prefetch 등등
+    - 이런 실시간 반응 기능들을 조금 더 쉽게 사용하고 싶을때 react-query 라이브러리를 사용하면 좋다.
+    - "npm install react-query"를 터미널에 입력하면 설치가 된다. 
+        * react-query 초기 세팅하기
+            - react-query를 설치했으면 index.js에 들어가 "const queryClient = new QueryClient()"이렇게 입력해 quertClient 기능을 react-query에서 가져와 변수로 저장한다.(QueryClient()만 입력해도 가져와짐)
+            - 추가로 "QueryClientProvider"을 입력해 react-query에서 QueryClientProvider기능을 가져온다.
+            - index.js안에 있는 <App/>컴포넌트 위에 <QueryClientProvider/>컴포넌트를 감싸고 client attr에 QueryClient 변수를 집어넣는다.
+                ex)
+                    const queryClient = new QueryClient()
+
+
+                    <QueryClientProvider client = {queryClient}>
+                        <App/>
+                    </QueryClientProvider>
+
+        * react-query 사용법
+            - 초기설정을 다 끝냈으면 axios등으로 데이터를 불러올 때 해당 axios코드를 useQuery란 함수로 한번 감싸면 된다.
+                ex)
+                    useQuery('작명',()=>
+                        axios.get('https://codingapple1.github.io/userdata.json').then((a)=>
+                            JSON.parse(a.data)
+                        )
+                    )
+            - useQuery안에 만든 ajax파일을 변수로 저장해서 사용하면 된다.
+                ex)
+                    let result = useQuery('작명',()=>
+                        axios.get('https://codingapple1.github.io/userdata.json').then((a)=>
+                            JSON.parse(a.data)
+                        )
+                    )
+        
+        * react-query 장점
+            1. ajax요청이 성공했는지 실패했는지 로딩중인지 react-query문법을 통해 쉽게 파악이 가능하다.
+                ex)
+                    let result = useQuery('작명',()=>
+                        axios.get('https://codingapple1.github.io/userdata.json').then((a)=>
+                            JSON.parse(a.data)
+                        )
+                    )
+
+                    result.data             == ajax가 연결성공 했을때 들어오는 데이터
+                    result.isLoading        == ajax가 로딩중일때 true 값을 가져옴
+                    result.errot            == ajax가 연결실패 했을때 true 값을 가져옴
+            
+            2. react-query로 ajax요청을 하면 틈만 나면 자동으로 재요청(refetch)을 해줌
+                ex)
+                    let reactquery = useQuery('작명', ()=>
+                        axios.get('https://codingapple1.github.io/userdata.json').then((a)=>
+                            console.log('요청됨'),
+                        )
+                    )
+                    ==> 이러면 요청됨 이라는 글자가 다른 창(vscode등)에 들어갔다 다시 홈페이지로 들어오면 콘솔창에 재입력이 된다.
+                        직접 한번 해보셈
+                
+                +) 재요청(refetch)의 시간을 조정하는 문법도 있다(staleTime)
+                    ex)
+                       let reactquery = useQuery('작명', ()=>
+                            axios.get('https://codingapple1.github.io/userdata.json').then((a)=>
+                                console.log('요청됨'),
+                            ),
+                            {staleTime : 2000}
+                        )
+                        ==> 이러면 reactquery 요청이 완료되고 2초 동안 다른창을 들어갔다 나와도 refetch가 되지 않는다.
+            
+            3. 요청 실패시 retry를 자동으로 해줌
+
+            4. state 공유를 안해도 된다.
+                - 데이터 가져온 것을 props로 넘길 필요없이 props할 컴포넌트 파일에 똑같이 ajax요청하는 코드를 똑같이 또 적으면 된다.
+                - react-query는 똑똑해서 ajax요청이 2개나 있으면 1개만 날려주고 캐싱기능이 있기 때문에 이미 같은 ajax요청을 한 적이 있으면 그걸 우선 가져와서 써준다.
+                
+            
+            5. 서버를 요청한 후 5분 사이에 ajax 결과를 캐싱할 수 있다.
+                ex) 
+                    12:10분에 get요청을 함
+                    12:13분에 다시 get요청을 함
+                    ==> react-query가 12:10분 결과를 우선 보여주고 그 다음 get요청함(기존 성공결과를 먼저 보여줬다 재요청한 데이터를 새로 보여줌)
+            
+        * react-query 유사 라이브러리
+            - redux-toolkit에 RTK Query도 유사한 역할을 함수
+            - 아무튼 이런 유용한 라이브러리들 많으니 필요하면 구글링 해서 사용법이랑 찾아보자.

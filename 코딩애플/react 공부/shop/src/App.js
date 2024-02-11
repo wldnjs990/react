@@ -12,6 +12,7 @@ import Detailpage from './routes/Detail.js';
 import Cartpage from './routes/Cart.js'
 import axios from "axios";
 import styled from 'styled-components';
+import { useQuery } from 'react-query';
 
 export let Context1 = createContext()
 // react로부터 Context함수 가져오기(Context함수는 state 보관함임)
@@ -21,6 +22,22 @@ function App() {
   let [shoes, setshoes] = useState(data)
   let [context, setcontext] = useState([10, 11, 12])
   let navigate = useNavigate()
+
+  // react-query로 실시간 정보 기능을 곁들인 axios로 서버에서 유저이름 가져와 보여주기(axios로 데이터 가져와서 JSON.parse가 되어있는 상태임)
+  let reactquery = useQuery('작명', ()=>
+    axios.get('https://codingapple1.github.io/userdata.json').then((a)=>
+      console.log('요청됨'),
+      a.data
+    ),
+    {staleTime : 2000}
+  )
+
+  // local storage에 상품방문기록 저장하기
+  useEffect(()=>{
+    if(JSON.parse(localStorage.getItem('watched')) == []){
+      localStorage.setItem('watched', JSON.stringify([]))
+    }
+  }, [])  
 
     return (
       <div className="App">
@@ -34,6 +51,9 @@ function App() {
             <Nav.Link onClick={() => {navigate('/Detail/0')}}>{b}</Nav.Link>
             <Nav.Link onClick={() => {navigate('/About')}}>{c}</Nav.Link>
             <Nav.Link onClick={() => {navigate('/Cart')}}>{d}</Nav.Link>
+            </Nav>
+            <Nav className="me-auto" style={{color : "#fff"}}>
+              {reactquery.isLoading ? '로딩중' : reactquery.error ? '에러남' : reactquery.data ? reactquery.data.name : null}
             </Nav>
           </Container>
         </Navbar>
@@ -87,6 +107,7 @@ function Mainpage(props){
   text-align : center;
   line-height : 100px;
   `
+
     return(
       <>
       {loadingtrigger == true ? <Loading>로딩중입니다..</Loading> : null}
@@ -96,7 +117,6 @@ function Mainpage(props){
             shoes.map(function(a, i){
               let findobj = shoes.find(function(a){return a.id == i})
               // shoes array에서 Detail페이지 번호에 해당하는 id값을 가진 object찾기
-              console.log(i)
               return(
                 <div className='product' key={i}>
                   {/*이것도 페이지 정렬이 발생했을때 해당 상품의 id값을 따라 URL파라미터가 붙을 수 있게 만들어야 한다.(아직 못만듬)*/}
@@ -169,12 +189,20 @@ function Mainpage(props){
 // 메인페이지 상품 데이터바인딩
 function Productlist(props){
     let [i, seti] = useState(props.i)
-    let [e, sete] = useState(props.e)
-    let [findobj, setfindobj] = useState(props.findobj)
+    let [e, sete] = useState(props.e) // findobj.id값에 1 더한 값
+    let [findobj, setfindobj] = useState(props.findobj) // 클릭한 대상의 object값
     let navigate = useNavigate()
+  // local storage에 상품방문기록 저장하기
+    let [watched, setwatched] = useState(JSON.parse(localStorage.getItem('watched')));
+    
       return(
         <>
-          <img src={"https://codingapple1.github.io/shop/shoes"+ e +".jpg"} onClick={() => {navigate('/Detail/' + i)}}></img>
+          <img src={"https://codingapple1.github.io/shop/shoes"+ e +".jpg"} 
+            onClick={() => {
+              navigate('/Detail/' + i),
+              setwatched(watched.push(findobj.id)),
+              localStorage.setItem('watched', JSON.stringify([...new Set(watched)]))
+            }}></img>
           <h4>{ findobj.title }</h4>
           <p style={{marginTop : "10px"}}>{ findobj.price }</p>
         </>

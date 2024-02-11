@@ -152,6 +152,7 @@ function (props){
     )
   };
   
+
   // 동적인 UI if문 function
   function Uicontent({uitrigger, shoes}){
 
