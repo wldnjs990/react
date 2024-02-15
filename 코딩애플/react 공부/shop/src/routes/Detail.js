@@ -41,7 +41,7 @@ function (props){
   let [blink, setblink] = useState('blink-off')
   // detail 페이지 업로드시 깜빡거리는 애니메이션 만들기
   let dispatch = useDispatch()
-  // Redux dispatch 사용하기
+  // Redux dispatch 사용하기(이거 붙여야 redux에서 만든 state 쓸 수 있음)
   let a = useSelector(state => state)
   // useSelector 사용하기
 
@@ -118,6 +118,7 @@ function (props){
               {
                 console.log(a.products.find(e => e.id == pageobj.id) == undefined)
                 a.products.find(e => e.id == pageobj.id) == undefined ? dispatch(plusobject(pageobj)) :  null
+                // store.js에 있는 products state중 해당페이지에 object의 id(pageobj.id)번호와 일치하는 object를 찾아보고 만약에 undefind가 나온다면 해당 pageobj의 object내용을 redux기능인 dispatch를 통해 store.js에 state를 수정해서 추가 해라.
               }
             }}>주문하기</button>      
           </div>

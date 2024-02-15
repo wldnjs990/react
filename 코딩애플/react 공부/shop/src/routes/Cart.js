@@ -1,14 +1,25 @@
 import { Table } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux";
 import { changeName, changeCount , setcount, deletobject} from "./../store";
+import { memo, useState } from "react";
+
+
+let Child = memo(function Child(){
+    console.log('랜더링됨')
+    return <div>자식</div>
+})
+
 
 function Cartpage(){
 
     let a = useSelector((state) => state);
     let dispatch = useDispatch()
+    let [num, setnum] = useState(0)
 
     return(
         <div>
+            <Child num = {num}></Child>
+            <button onClick={()=>{setnum(num + 1); console.log(num)}}>+</button>
             {a.user[0].name + a.user[0].count}
             <Table striped bordered hover>
                 <thead>

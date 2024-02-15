@@ -3,13 +3,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button, Navbar, Container, Nav, NavDropdown} from 'react-bootstrap';
 import logo from './logo.svg';
 import "./App.css"
-import { createContext, useEffect, useState } from 'react';
+import { Suspense, createContext, lazy, useEffect, useState } from 'react';
 import img from '../src/cat4.jpg';
 import {a, b, c, d} from "./data.js";
 import data from "./data.js";
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
-import Detailpage from './routes/Detail.js';
-import Cartpage from './routes/Cart.js'
+const Detailpage = lazy(()=>import('./routes/Detail.js'))
+const Cartpage = lazy(()=>import('./routes/Cart.js'))
+import Testpage from './routes/Testing.js';
 import axios from "axios";
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
@@ -60,45 +61,46 @@ function App() {
         {/* 네비게이션 바 */}
   
         {/* 페이지 관리 */}
-        <Routes>
+        <Suspense fallback={<div>로딩중</div>}>
+          <Routes>
+            <Route path='/' element={<Mainpage shoes = {shoes}/>}></Route>
 
-          <Route path='/' element={<Mainpage shoes = {shoes}/>}></Route>
+            <Route path='/Detail/:pagenum' element={
+              <Context1.Provider value={{context}}>
+                <Detailpage shoes = {shoes}/>
+              </Context1.Provider>
+            }></Route>
 
-          <Route path='/Detail/:pagenum' element={
-            <Context1.Provider value={{context}}>
-              <Detailpage shoes = {shoes}/>
-            </Context1.Provider>
-          }></Route>
+            <Route path='/About' element={<Aboutpage/>}>
+                <Route path='members' element={<div>직원정보</div>}></Route>
+                <Route path='location' element={<div>위치정보</div>}></Route>
+            </Route>
 
-          <Route path='/About' element={<Aboutpage/>}>
-              <Route path='members' element={<div>직원정보</div>}></Route>
-              <Route path='location' element={<div>위치정보</div>}></Route>
-          </Route>
+            <Route path='/Homework' element={<Homework/>}>
+                <Route path='work1' element={<h5>1번 메뉴</h5>}></Route>
+                <Route path='work2' element={<h5>2번 메뉴</h5>}></Route>
+            </Route>
 
-          <Route path='/Homework' element={<Homework/>}>
-              <Route path='work1' element={<h5>1번 메뉴</h5>}></Route>
-              <Route path='work2' element={<h5>2번 메뉴</h5>}></Route>
-          </Route>
+            <Route path='/Cart' element={<Cartpage/>}></Route>
 
-          <Route path='/Cart' element={<Cartpage/>}></Route>
+            <Route path='/test' element={<Testpage/>}></Route>
 
-          <Route path='*' element={<div>하하 주소를 잘못 입력했다구(404에러)</div>}></Route>
-        </Routes>
+            <Route path='*' element={<div>하하 주소를 잘못 입력했다구(404에러)</div>}></Route>
+          </Routes>
+        </Suspense>
+
         {/* 페이지 관리 */}
 
       </div>
     );
   
 }
-/* 메인페이지 */
-function Mainpage(props){
-  let [shoes, setshoes] = useState(props.shoes)
-  let [count, setcount] = useState(0); // 물품 더보기 count
-  let [loadingtrigger, setloadingtrigger] = useState(false)
-  let Loading = styled.div`
+/* 메인페이지 로딩창 div */
+let Loading = styled.div`
   width : 200px;
   height : 100px;
   background : #fff;
+  color : #000;
   display : block;
   position : fixed;
   top : 50%;
@@ -107,6 +109,13 @@ function Mainpage(props){
   text-align : center;
   line-height : 100px;
   `
+/* 메인페이지 로딩창 div */
+
+/* 메인페이지 */
+function Mainpage(props){
+  let [shoes, setshoes] = useState(props.shoes)
+  let [count, setcount] = useState(0); // 물품 더보기 count
+  let [loadingtrigger, setloadingtrigger] = useState(false)
 
     return(
       <>
