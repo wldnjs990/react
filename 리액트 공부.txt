@@ -1,0 +1,325 @@
+리액트
+* 리액트 라이브러리 사용하는 이유
+    - 웹 html에서 모바일 앱처럼 부드러운 페이지 전환이 가능한 SPA(Single Page Application)을 구현하기 위해 react가 사용되기 때문
+    - JS로도 구현이 가능하긴 하지만 코드가 너무 길고 복잡해지기 때문에 간단한 react로 구현하는 것
+    - react 말고도 [Vue, Svelt, Preact, SolidJS]등 비슷한 라이브러리들이 존재함
+    - 그 중 가장 대중적인 라이브러리가 react
+    - react로 코딩하면 html 재사용이 편리하다고 한다.(아직 안해봄)
+    - 게다가 같은 문법으로 웹개발 뿐 만 아니라 앱개발도 할 수 있음
+    - 대부분 회사에서 react 쓰고 있어서 공부해야함
+
+* 리액트 개발환경 세팅하기
+    1. node.js 설치(왼쪽버튼 설치)
+    2. 리액트 사용할 폴더 하나 생성해서 우클릭 -> 터미널 열기
+    3. " npx create-react-app "작명" "을 터미널에 입력해 react 작동시키기
+        * 만약 안될시 윈도우
+            - powershell 우클릭 후 관리자 권한으로 실행
+            - 터미널에 "Set-ExecutionPolicy Unrestricted" 입력
+            - 실행규칙 나오면 y(예) 입력
+            * 그래도 안된다
+            - 환경변수가 제대로 연결되었는지 확인
+                *시스템 - 고급시스템설정 - 환경변수 - 시스템변수에 PATH변수 편집 - 내 컴퓨터의 npm 까지 도달하는 경로가 제대로 연결되어있는지 확인 하고 연결되어있지 않으면 새로 하나 추가하기
+            - npm(NodePakageManager)을 최신버전으로 업데이트 했는지 확인 ("npm install -g npm" 을 입력해 새로 업데이트 시도 해보기)
+        
+        * 솔직히 내가 설치할때 powershell을 사용해 본 적이 없어서 뭘 어떻게 해야하는지 몰라서 gpt에 계속 물어보면서 어찌저지 연결했는데
+          아직도 왜 연결이 안됐었는지 이해가 안됨 npm 새로 업데이트 하니깐 갑자기 cra 작동 되던데 이전에는
+            PS C:\안지원\리액트\코딩애플\react 공부> npx create-react-app practice
+            npm ERR! code ENOENT
+            npm ERR! syscall lstat
+            npm ERR! path C:\Users\wl990\AppData\Roaming\npm
+            npm ERR! errno -4058
+            npm ERR! enoent ENOENT: no such file or directory, lstat 'C:\Users\wl990\AppData\Roaming\npm'
+            npm ERR! enoent This is related to npm not being able to find a file.
+            npm ERR! enoent
+
+            npm ERR! A complete log of this run can be found in: C:\Users\wl990\AppData\Local\npm-cache\_logs\2023-12-27T07_51_49_764Z-debug-0.log
+        이렇게 계속 에러가 떴었어.
+        나는 경로가 제대로 연결이 안되어있나 하고 환경변수 계속 건드렸는데 계속 저렇게 뜨더라
+        PATH(경로)가 잘못 연결됐나 PATH도 직접 바꿔볼려고 했는데 gpt 따라서 바꿔도 계속 path C:\Users\wl990\AppData\Roaming\npm 이거 고정이더라
+        나중에 볼 미래의 지원지원아 왜 이런지 알려주렴
+
+        * 만약 안될시 맥
+            - 맥북 사면 그 때 배우는걸로
+
+* 리액트 팁
+    - node_modules 폴더는 프로젝트 구동에 필요한 모든 라이브러리 소스 코드를 담아둔 공간임 그래서 따로 건드릴 필요 없음.
+    - public 폴더는 이미지 파일이나 html파일 잠깐 보관하고 싶을때 사용하는 폴더임
+    - src 폴더가 내가 직접적으로 작업할 폴더임
+    - src에 들어가면 app.js가 있는데 거기가 이제 내가 작업할 공간임.
+    - app.js 파일에서 작업을 하는 이유는 react에서 app.js에서 만든 html을 public 폴더 안에 있는 index.html에 집어넣게 하는 파일을 만들어서 그럼(index.js 파일이 그 역할을 함)
+    - app.js에서 작업하는 html은 실은 html이 아니라 JSX라는 js에서 쓰는 html 대용품임.
+        * 원래 리액트에서 html 만들려면 React.createElement('div', null, 'Hello World') 요딴식으로 만들어야 함
+    - pakage.json은 내 프로젝트 정보를 쭉 기입하는 파일임(평소엔 건드릴 필요 없음)
+
+* 리액트 실행
+    - "npm start"를 vscode 터미널에 치면 live server 처럼 내가 작업하고 있는 페이지를 보고 싶을때 브라우저를 열어준다.
+
+* 리액트 기능
+    - "에러메시지"
+        리액트에서 조금의 오류가 발생하면 바로 브라우저에서 경고 메시지를 띄운다.
+    - 파일들을 연결 시키려면 import './파일명'을 입력하면 되는듯 하다
+        * import './App.css';
+    - "JSX와 HTML 차이"
+        JSX에서 쓰이는 문법들 중에 html이랑 js랑 겹치는 문법들이 있어서 일부 변경된 것들이 있다.
+            * html "class"는 js에서 "class"라는 문법이 존재해서 JSX에서 "classname"으로 사용된다.
+    - "데이터바인딩"
+        js에선 document.querySelector('~~').innerHTML = "변수"; 이렇게 대상을 추적해서 집어넣어야 하는데
+        리액트 JSX에선 대상을 추적 할 필요 없이 사용하고 싶은 위치에 중괄호{} 를 끼워넣고 그 안에 변수명을 입력하면 된다.
+            * document.querySelector('~~').innerHTML = "변수"; == {변수}
+            * 이걸 활용하면 기존 js 보다 훨씬 자유도 높은 코딩이 가능함(ex. id = {변수})
+        이렇게 데이터를 원하는 자리에 꽂아넣는 것을 리액트에선 "데이터바인딩"이라고 한다.
+        프론트엔드가 주로 하는 일이 서버에서 이렇게 데이터 변수를 가져와 HTML 사이에 데이터바인딩을 하는 일임.
+    - "style = {}"
+        기존 HTML에선 style을 attr에 넣고 싶으면 "style = "color : red"" 이렇게 했지만
+        리액트 JSX에선 따옴표"" 대신 중괄호{}를 쓰고 그 안에 Object 형식으로 작성해야 한다. "style = { {color : 'red', fontSize : '16px'} }" 이렇게
+    - jsx에선 return() <- 안에 HTML을 작성해야 한다.
+    - return() 안에 태그를 병렬로 2개 이상 기입하면 안된다.
+        * 그래서 맨 처음에 모든 태그를 감싸는 div를 하나 만들어야 함.
+        ex) <div></div>
+            <div></div>
+            X
+            
+        ex) <div>
+                <div></div>
+                <div></div>
+            </div>
+            O
+
+
+    * state(중요한 변수 담기)
+        - 코딩을 할 때 잠깐 자료들을 저장하고 싶을떈 "const" ,"var", "let" 같은 변수들을 활용하면 된다.
+        - "useState()"는 리액트에서 변수들 처럼 자료를 잠깐 저장하는데에도 사용된다.
+        - useState에 저장한 자료를 가져다 쓰고 싶으면 "let [a, b] = useState('자료')" 이렇게 왼쪽에 자료를 뽑을 수 있게 하는 문법을 만들면 된다.
+        - let [a, b]로 만들어놓은 문법에 a를 사용하면 useState에 저장된 자료를 꺼내온다.
+        - let [a, b]로 만들어놓은 문법에 b는 state의 변경을 도와주는 함수로 사용된다.(나중에 배움)
+        - useState에 자료가 여러개일 경우엔 array형식으로 자료를 직렬하여 사용할 수 있다.
+            ex) let [a, b] = useState(['0번째 array', '1번째 array', '2번째 array'])
+                *사용시 
+
+                <h4> { a[0] } </h4>   ==   <h4>0번째 array</h4>
+                <h4> { a[1] } </h4>   ==   <h4>1번째 array</h4>
+                <h4> { a[2] } </h4>   ==   <h4>2번째 array</h4>
+
+            *Destructuring문법
+                - 내가 array를 저장하기 위해 "let num = [1, 2]" 이런 함수를 만들었다.
+                - 그런데 이 array가 너무 유용해서 따로 변수로 저장해서 또 사용하고 싶다.
+                - 그러면 let a = num[0] / let b = num[1] 이런식으로 짤 수 있다.
+                - 하지만 너무 많은 array가 있을땐 코드를 여러줄 짜야 할 수 있다.
+                - 그 때 사용하는 문법이 Destructuring 문법이다.
+                - let [a, b] = [1, 2] 이렇게 짜면 변수명의 array와 저장되는 자료의 array가 호환되어 let a = num[0]와 같은 역할을 하게 된다.
+        - 위의 let [a, b] = useState('남자 코트 추천') 변수는 Destructuring문법으로 보면 
+            let[a, b] = ["남자 코트 추천", 함수]와 같다.
+
+        - 그런데 굳이 변수를 안쓰고 useState를 사용해야 하는 이유가 뭔지 모르겠다
+            * 이유는 변수나 useState를 사용할때 자료의 내용이 수정 / 변경 될 때 HTML이 리렌더링 되는 것의 차이가 있다.
+                - let 같은 일반 변수에 자료가 수정되거나 외부에서 받아와 변경되거나 하면 해당 변수를 데이터바인딩한 HTML들이 리렌더링이 되지 않는다.
+                - state함수에서 자료를 변경하게 되면 state를 데이터바인딩 하던 HTML들은 자동으로 리렌더링이 된다.
+                - 이렇게 간단한 하드코딩된 자료들은 일반 변수도 리렌더링이 잘 될 수 있는데 자료들이 많아지면 리렌더링의 차이가 있다고 한다.
+                - 나중에 차이점이 뭔지 확인해봐야 할 듯
+
+        - state를 사용하는건 좋은데 웹페이지 로고 같이 몇 년에 한 번 바뀔만한 그런 HTML들은 변수나 state를 사용하는게 비효율적이니 사용하지 마라.
+
+    * eslint(터미널에 나오는 경고창 표시)
+        - 리액트로 작업하다 터미널을 켜서 보면 "WARMING in [eslint]"라는 경고창이 종종 보인다.
+        - 이 경고문은 변수가 만들어놓고 사용되지 않고 있다 등의 사소한 경고창이다.
+        - "/* eslint-disable */"을 jsx 맨 위에 입력하면 터미널에서 eslint가 표시되지 않는다.
+    
+    * onClick으로 버튼 클릭하면 내용변경되는 기능 만들기(react state 변경함수 사용 후 리렌더링 되는 과정)
+        - 버튼을 클릭하면 html의 내용이 바뀌는 버튼 기능을 만드는 작업을 onClick 이벤트핸들러로 작업한다.
+        - 보통 js에서는 버튼을 클릭하면 변수를 ++, --, 내용변경 등으로 수정한 뒤 html에 innerHTML등으로 수정한다.
+        - react에선 useState로 생성한 변수 내용들을 변수 두번째 기능인 "함수"를 이용해 내용을 바꾸고 한번에 리렌더링을 할 수 있다 이를 변경함수라고 한다.
+        - let[a, b] = useState(~)로 만든 변수에 "b"가 함수기능이다.
+        - "b(수정하고 싶은 내용)"을 입력하면 a의 자료가 ()안의 내용으로 수정되어 html 안에 { a }로 넣어놨던 데이터들이 자동으로 리렌더링 된다.
+        - "b(a + 1)"처럼 내용을 수정하면 기존의 a안에 들어있던 내용에서 + 1을 한 값이 계산되어 나온다.(여러 계산식 적용 가능)
+         * 정리하면 "변경함수"를 사용하면 변수의 내용을 변경함과 동시에 리렌더링을 할 수 있게 된다.
+
+    * 이벤트핸들러 발생시 이벤트버블링현상 막는 방법
+        - 가끔식 부모태그에 이벤트핸들러를 걸면 자식태그를 클릭해도 이벤트 버블링으로 핸들러가 실행되는 경우가 있다.
+        - 이를 막기 위해선 자식요소에 같은 이벤트핸들러를 만든 후 파라미터함수를 추가하고 이벤트 기능에
+          "파라미터함수(보통e를 자주 사용함).stopPropagation()"을 추가하면 상위요소로 이벤트버블링이 되는 것을 막을 수 있다.
+          ex) <p className="자식요소" onClick={(e)=>{e.stoppropagation}}></p>
+        
+    *array, object state 변경하는 법
+        - 만약 수정해야 할 state가 array형식(배열)일때 내가 몇 번째 array 자료를 수정해야 한다. 하면 다음과 같이 바꿔야 한다.
+            * array형식 state에서 특정 자료 수정하기
+                1. "let newa = [...a];"로 기존 array와 같은 내용의 변수를 만든다.(...을 넣어야 array형태로 저장이 되는듯 한데 나중에 찾아보자)
+                2. "newa(n) = '수정할 내용';"로 새로 만든 변수에 바꿀 구간(n)의 내용을 수정해준다(계산식이면 newa(n) = newa(n) + 1;이런식으로 하면 되지 않을까)
+                3. "b(newa);"로 바꾼 변수를 기존에 state에 덮어 씌우면 끝
+                    * 그냥 a[n] = '수정할 내용' 이렇게 하면 되는거 아닌가? = state의 원본은 되도록 보존해 놓는게 좋아서 일부러 변수를 새로 만드는 것임.
+            * onClick에서 파라미터 사용하기
+                - "onClick = {function(){파라미터사용하는함수(파라미터)}}" 이렇게 function으로 한 번 감싸준 후에 함수를 넣으면 파라미터를 넣을 수 있다.(왠진 모름 찾아봐야함)
+
+    * state변경함수 특징
+        - 기존 state == 신규 state의 내용이 같은 경우 ex) '변경함수(기존state)' 변경함수의 내용을 변경하지 않는다.(일종의 자원절약 개념)
+    
+    * array / object 특징
+        - array나 object 변수를 만들면 []안에 있는 데이터가 저장이 되는 것이 아니라 []안의 내용들은 전부 "RAM"이라는 공간에 숨어있고, 변수는 그 내용을 가리키는 화살표 역할만을 한다.
+        - 요점은 array / object변수들 만들고 복사본을 만들어도 그 변수의 내용은 오직 화살표를 뜻 하며 두 변수의 값을 바꿔도 둘은 화살표를 공유하기 때문에 둘 다 같은 값이 나오는 쌍둥이가 된다.
+        - [1, 2, 3]인 array / object 변수와 그 복사본 어느것을 수정해도 ( ex) [2, 2, 3]으로 수정함. ) 둘 다 같은 값을 공유하게 된다.(둘 다 [2, 2, 3]으로 표기됨.)
+        
+        * 이 array/ object 에 대해 자세히 공부하고 싶으면 "reference data type" 검색해서 공부하자
+    
+    * ...(spread operator)을 사용하는 이유
+        * 앞에 state변경함수 특징과 array / object 특징을 봤으면 array인 state함수를 변경하기 위해 새로 변수를 복사해 만들어도
+          복사한 변수의 내용을 바꾸면 원본 변수의 내용도 바뀌기 때문에 state변경함수가 둘의 내용이 같다고 판단해 변경을 하지 않게 된다.
+          그래서 화살표를 공유하지 않는 아예 독립적인 변수를 만들기 위해 ...을 사용하는 것이다.
+
+        - ...은 해당 변수에 괄호를 없애달라는 문법이다.
+        - [1, 2]인 변수를 ...붙인다면 1, 2가 되는 것이다.
+        - 여기서 다시 []괄호를 씌우게 되면 완전히 독립적인 문법이 된다.
+        - 그래서 '[...변수]'를 사용하면 기존에 있던 array / object를 지우고 완전히 독립적인 문법으로 새로 만드는 것이다.
+        - 이걸 전문용어로 "shallow copy"라고 부른다.
+
+    * 컴포넌트(component)로 많은 div들 한 단어로 축약하기
+        - 컴포넌트를 사용하면 정리가 복잡한 html 덩어리들을 축약시킬 수 있다.
+        - 지금 App.js에서 작성하고 있는 html도 App() 컴포넌트 안에 작성되고 있다.(index.js에서 확인 가능)
+        * 컴포넌트 만드는 법
+            1. function을 만든다.
+            2. 클로저에 return() 입력 뒤 안에 html을 담는다
+                ex) function 함수명(){
+                    return(
+                        <div>컴포넌트 내용</div>
+                    )
+                }
+            3. 사용할땐 <함수명></함수명>으로 사용하면 된다.
+                * <함수명/> 이것만 입력해도 작동된다.
+                * 컴포넌트를 만들때 함수명은 반드시 첫글자를 대문자로 만들어야 컴포넌트 기능을 한다.
+                    ex) component(X) / Component(O)
+        
+        * 컴포넌트를 사용하기 좋은 경우
+            1. 반복적인 html을 만들때
+            2. 큰 페이지들을 만들때
+            3. 자주 변경되는 html UI들을 만들때
+
+        * 컴포넌트 사용 시 문제점
+            1. 기존 컴포넌트 이외에 새로 컴포넌트를 만들면 기존 컴포넌트 안에 있던 state들을 사용 할 수 없게 된다.(function처럼)
+        
+        * 변수를 통해 컴포넌트 만들기
+            - const component = function(){ return(); } 이런식으로 변수에 컴포넌트를 저장해 사용하는 개발자도 있다.
+            - 이런 방법을 사용하면 const의 변수 내용을 수정할 수 없는 특성 때문에 실수로 변수의 내용을 바꾸는 코드를 적어도 
+              react에서 오류가 뜨며 내용을 잘못 수정했다는 내용을 확인 할 수 있다.
+
+    * react에서 동적인 UI 만들기(모달창 만들기)
+        * 동적인 UI 만드는 step
+            1. html / css로 미리 디자인 완성
+            2. UI의 현재 상태를 state로 저장 ex) let [modal, modalset] = (true); <= 이런 식으로 정확히 말하면 js에서 클래스로 on, off 기능 만드는 것 처럼 useState로 true, false / 0, 1 / 열림, 닫힘 등 기능이 작동하는 트리거를 만드는 작업임.
+            3. state에 따라 UI가 어떻게 보일지 작성(if문 등등 사용 js 처럼 방식으로 만들면 됨)
+
+    * react html 안에 if문 사용하기
+        - return()안에 if문을 사용하는 것은 불가능 하다.
+        - 대신에 삼항연산자(ternary operator)이란 문법을 사용한다.
+        - " "조건식" ? "참일때 실행할 코드" : "거짓일때 실행할 코드" "으로 적으면 작동된다.
+    
+    * map(반복문, html을 축약하는 다른 방법)
+        * 기존에 js에선 for반복문으로 똑같은 html요소들을 축약시켰지만 react에선 html안에 for문이 사용 불가능 하기 때문에 대체로 map문을 사용한다.
+        * map문은 함수이므로 html 안에서 사용할 떄 {} <- 클로저를 먼저 만든 다음에 그 안에 작성해야 한다. 아니면 그냥 흰색 글자로 나옴.
+        - "[1, 2, 3].map(function(){})" 이런 형식으로 array나 object 옆에 .map()를 적고 파라미터에 콜백함수(function(){})를 적어넣어
+        - map을 사용하면 array의 자료 갯수 만큼 함수안의 코드를 실행해준다.
+        - 콜백함수(function(파라미터){})안의 파라미터에 들어가는 함수는 array의 자료들의 값과 순서를 가지고 있다.
+            * ex) "[1, 2, 3].map(function(a, i){})" 여기서 a는 array안의 값 1, 2, 3을 모두 가지고 있고 i는 반복문이 돌 때 마디 1씩 증가하는 정수의 값을 가지고 있어 index(순서)용으로 쓰인다.
+        - map의 파라미터 안에 return 함수를 사용하면 그 값을 array에 담아준다.
+            * ex) "[1, 2, 3].map(function(){
+                        return ('<p>안녕</p>')                ==>  [<p>안녕</p>, <p>안녕</p>, <p>안녕</p>]
+                    })"
+            - 이렇게 html에서 map을 이용해 array형태로 만들어 놓으면 react의 html에서 array 안에 코드를 짜도 html이 그대로 반영되는 특성 때문에
+              실제로 <p>안녕</p>   이런 형태로 반영된다.
+                    <p>안녕</p>
+                    <p>안녕</p>
+        - 실제로 사용할때 array를 useState로 만들어서 수정에 용이하도록 바꾸는게 좋다(나중엔 서버 통신으로 array데이터를 가져와서 내가 수정 안해도 자동으로 업데이트 해주니깐).
+            ex) let [array, setarray] = [1, 2, 3]
+                array.map(function(){
+                    return (
+                        '이러면 state만 수정하면 map함수도 업데이트 된다구'
+                        )
+                })
+        * map함수를 사용하다 보면 console창에 경고 표시가 뜨는데 반복문은 반복문 마다 고유한 "key"라는 것을 가져야 하기 때문에
+          반복문 html의 최상위 부모태그에 key = {생성된 html마다 다른 숫자}를 추가하면 되는데
+          map 콜백함수 파라미터에 2번째 함수(자료들의 갯수만큼 1씩 증가하는 정수의 값을 가진 함수)를 이용하면
+          반복문의 갯수만큼 0, 1, 2 ... 숫자들이 반목문 html마다 부여됨으로 오류가 사라진다.
+        
+        * react에서 for반복문을 굳이굳이 쓰고싶다
+            - html 바깥에 컴포넌트를 하나 만들어서 그 안에 반복문을 만들고 컴포넌트를 html 안에 집어넣으면 되긴 하다.
+            - 귀찮으니 꼭 필요한 상황 아니면 html 안에 map으로 집어넣자.
+
+    * props(자식(컴포넌트)이 부모(컴포넌트)의 state를 가져다쓰고 싶을때)
+        - react애서 자식 컴포넌트(메인 컴포넌트에 삽입하는 컴포넌트)에 부모(메인 컴포넌트)의 state를 사용하려 하면 오류가 발생한다.
+        - 이는 funtion의 특징인데 function 안에 만든 변수나 state는 function 안에서만 사용이 가능하고 바깥에는 사용을 할 수 없기 때문이다.
+        - 하지만 props함수를 사용하게 되면 부모가 가지고 있는 state 요소를 자식에게 전송할 수 있게 된다.
+            * 부모 -> 자식 state 전송하는 법
+                1. "<자식컴포넌트 작명 = {state이름}></자식컴포넌트>" 이렇게 부모컴포넌트 안에 있는 자식컴포넌트에게 부모에게 가져올 state의 이름을 작명한 뒤 클로저에 기존 부모 state 이름을 넣는다.
+                2. 자식 컴포넌트 function 파라미터에 함수(props)를 등록 후(props라는 함수 명을 대중적으로 사용함) 사용할 구간에 props.작명 으로 사용하면 된다.
+        - props 전송은 오직 부모 -> 자식 으로만 전달이 가능하다.(자식 -> 부모, 자식 -> 자식 불가능) 그래서 부모에 공용으로 사용할 state를 등록하는게 좋을거다.
+        - props로 일반 문자도 전송 할 수 있다. ex) <modal 일반문자전송 = "문자"/>
+                                                 props.일반문자전송 == 문자
+    
+    * input react에서 사용하기
+        - 'input' 태그는 <input> 하나로 끝맺음 할 수 있는 js와 다르게 react에선 <input></input>이렇게 끝맺음을 하는 태그를 같이 만들어야 한다.
+        - input 태그엔 여러가지 type들이 있는데 text(글), range(범위), checkbox(체크박스)등등 여러가지가 있다.
+        - "select"라는 태그는 삽입될 내용을 선택하여 넣는 input 계열 태그이다.
+        - "textarea"라는 태그는 커다란 input 박스를 생성하는 input 계열 태그이다.
+        * input에도 타 HTML태그처럼 여러가지 이벤트핸들러(ex. onClick)를 달 수 있다.
+            - "onChange = {function(){}}"이벤트핸들러는 input에 뭔가를 입력시 코드를 실행하고 싶을때 사용한다.
+            - "oninput"도 똑같은 기능의 이벤트핸들러다.
+            * 이벤트핸들러의 종류는 30가지가 넘을정도로 다양하니 필요한 핸들러가 있음 검색해서 찾아보는걸 추천
+        - input에 입력된 값들은 이벤트핸들러에 "파라미터"에 함수를 만들면 그 곳에 저장할 수 있다.
+            ex) <input onChange={(e)=>{console.log(e.target.value)}}></input>
+                이렇게 하면 input에 내용을 입력할 때 마다 console창에 내용이 업데이트 된다.
+
+    * state 리렌더링 추가설명
+        - state가 수정되어 리렌더링 되게 하기 위해선 반드시 state함수를 수정해야지만 리렌더링이 된다.
+        - js처럼 state의 array값을 단순 수정해서는 리렌더링이 되질 않는다.
+            ex) let [state, setstate] = [1, 2, 3];
+                state.push(4) ==> [1, 2, 3, 4]로 array가 수정되긴 하지만 페이지 리렌더링은 안됨.(X)
+                
+                let copy = [...state];
+                copy.push(4);           ==> [1, 2, 3, 4]로 array가 수정됨과 동시에 페이지 리렌더링이 된다.(O)
+                setstate(copy);
+        - 리액트에서 state를 사용하는 이유가 이거 때문인거 같다.
+        - 적응만 되면 js처럼 HTML 수정/추가 명령어 써서 추가 시킬 필요없이 알아서 페이지 만들거나 수정해주니깐
+    
+    * array 배열 요소 추가 / 삭제 함수
+        * 추가
+            1. push() == 배열 끝에 요소 추가
+            2. unshift() == 배열 맨 앞에 요소 추가
+            3. splice("위치(index)", 0, "요소1", "요소2 등등") == 해당 위치에 배열을 추가(한번에 여러개도 가능, 0 부분에 숫자를 적으면 적은 숫자만큼 위치로 부터 요소를 삭제한다. 삭제에서 입력한 splice형식대로 하면 됨)
+        + 삭제
+            1. pop() == 배열 끝에 요소 삭제
+                * "let popped = arr.pop()" 이렇게 변수 설정하면 제거한 요소를 반환 받을 수 있음
+            2. shift() == 배열 첫번째 요소 삭제
+                * "let shifted = arr.shift()" 이렇게 변수 설정하면 제거한 요소를 반환 받을 수 있음
+            3. splice("위치(index)", "제거갯수") == 해당 위치로 부터 입력한 갯수만큼 요소 삭제(뒤에 요소를 더 추가시키는 것도 가능함 추가에서 입력한 splice형식대로 하면 됨)
+                * "let spliced = arr.splice("위치(index)", "제거갯수")" 이렇게 변수 설정하면 제거한 요소를 반환 받을 수 있음
+    
+    * class문법(옛날에 사용했던 react컴포넌트 만드는 방법)
+        - 옛날에 리액트에서 컴포넌트를 만들때 function을 사용해서 만드는 현재와 달리 class를 이용하여 컴포넌트를 만들었던 적이 있다.
+        - 물론 지금은 구식 방법이라서 class로 컴포넌트를 만드는 일은 없다.
+        
+        * 옛날 class컴포넌트 예시
+           "class "작명" extends React.Component {
+            constrictor(props){
+                super(props);
+                this.state = {
+                    name : 'kim',
+                    age : 20
+                }
+            }
+            render(){
+                return(
+                    <div>여기에 HTML작성함 {this.state.name}{this.props.~~}</div>
+                    <button onClick={()=>{this.setState({age : 21})}}></button>
+                )
+            }
+          }
+          * html
+            - 이런식으로 리액트 컴포넌트 클로저에 constructor, super, render을 먼저 입력한 후에 render에 return문을 만들어 HTML을 작성하고 constrictor 클로저 안에 state를 object형식으로 만들면 된다.
+            - 그리고 다 만든 class컴포넌트는 function컴포넌트와 동일하게 <작명></작명> 혹은 <작명/> 이렇게 컴포넌트를 부를 수 있다.
+          * state
+            - class의 state는 function의 state와는 다른 형식으로 작동 되는데 state를 만들땐 this.state로 시작을 해야 하고 object형식으로 만들어야 한다.
+            - class의 state를 부를때는 {this.state."작명"}을 입력해 원하는 state를 가져올 수 있다.
+            - class의 state를 변경하고 싶으면 this.setState({"작명" : "내용"})이렇게 setState()라는 함수를 활용하면 된다.
+          * props
+            - class의 props는 constrictor와 super의 파라미터에서 입력 후 사용 가능하다.
+            - 사용 방법은 {this.props."작명"}으로 사용하면 된다.
+
+
+ 
